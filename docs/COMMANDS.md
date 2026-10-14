@@ -35,12 +35,12 @@ Application and backend versions.
 ## anova
 
 ```text
-anova response group
+anova response factor1 [factor2] [factor1#factor2] [, partial|sequential]
 ```
 
-Backend: statsmodels OLS.
+Backend: statsmodels OLS / NumPy.
 
-One categorical factor only; reports ANOVA and stores an equivalent indicator-regression model.
+Unweighted one- or two-factor classical ANOVA, with optional two-way interaction (`a##b`). Partial drop-term or order-dependent sequential SS; see [ANOVA scope](ANOVA.md). Reference-coded partial main effects with interactions need not match Stata's default partial SS. No repeated measures or weights.
 
 ## append
 
@@ -905,12 +905,12 @@ Proportional-odds ML, latent-scale thresholds and transformed covariance; no rob
 ## oneway
 
 ```text
-oneway response group [, tabulate]
+oneway response group [, tabulate bonferroni|sidak|scheffe]
 ```
 
 Backend: NumPy/SciPy.
 
-Classical equal-variance one-way ANOVA, optionally group counts/means/SDs; no Bartlett or post-hoc comparisons.
+Classical equal-variance ANOVA, with pooled-variance adjusted pairwise differences and simultaneous intervals for Bonferroni, Šidák, or Scheffé. One correction at a time. No Welch, paired/repeated designs, or weights; [details](ANOVA.md).
 
 ## oprobit
 
@@ -1011,6 +1011,16 @@ prtest binary = # | prtest binary, by(group) [level(#)]
 Backend: statsmodels.
 
 Independent asymptotic proportion z test; pooled null variance for two groups.
+
+## pwmean
+
+```text
+pwmean response, over(group) [mcompare(tukey|bonferroni|sidak|scheffe) level(95)]
+```
+
+Backend: SciPy / pooled-variance OLS.
+
+One response and one grouping variable, 2-100 groups. Returns unweighted means and adjusted pairwise tests/intervals, with Tukey-Kramer as the default. See [ANOVA details](ANOVA.md).
 
 ## pwcorr
 
