@@ -176,7 +176,10 @@ class CommonModelCommands:
         self.out(pd.Series(self.r).to_string(float_format=lambda v: f"{v:.6g}"))
 
     def _oneway(self, args, opt):
-        o = options(opt, ("tabulate",))
+        o = options(opt, ("tabulate", "bonferroni", "sidak", "scheffe"))
+        comparisons = [name for name in ("bonferroni", "sidak", "scheffe") if name in o]
+        if len(comparisons) > 1:
+            raise StataError("Select only one multiple-comparison adjustment")
         head, q = qualifiers(args)
         cols = self.varlist(head)
         if len(cols) != 2 or not pd.api.types.is_numeric_dtype(self.df[cols[0]]):
@@ -223,9 +226,14 @@ class CommonModelCommands:
         )
         if "tabulate" in o:
             self.out(frame.groupby(group)[y].agg(["count", "mean", "std"]).to_string())
+        if comparisons:
+            self._oneway_posthoc(
+                frame, y, group, mse=float(ssw / (n - k)),
+                df_r=n - k, method=comparisons[0], level=self.level,
+            )
         self.notice(
             "ONEWAY",
-            "Classical equal-variance ANOVA. Bartlett's test and multiple-comparison procedures are not produced; unsupported options fail explicitly.",
+            "Classical equal-variance ANOVA. Bartlett's test and unequal-variance/repeated-measures designs are not implemented; unsupported options fail explicitly.",
         )
         return y, group, q
 
