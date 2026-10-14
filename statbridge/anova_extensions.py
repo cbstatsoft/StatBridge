@@ -186,9 +186,9 @@ class AnovaExtensions:
         for term in terms:
             if "#" in term:
                 a, b = term.split("#")
-                pattern = rf"\d+\.{re.escape(a)}#\d+\.{re.escape(b)}"
+                pattern = rf"[^#]+\.{re.escape(a)}#[^#]+\.{re.escape(b)}"
             else:
-                pattern = rf"\d+\.{re.escape(term)}"
+                pattern = rf"[^#]+\.{re.escape(term)}"
             block = [col for col in x if re.fullmatch(pattern, col)]
             if not block:
                 raise StataError(f"ANOVA term {term} has no estimable columns")
