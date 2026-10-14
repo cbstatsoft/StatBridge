@@ -92,6 +92,9 @@ def validate_wheel(wheel, root, version):
         for name in ("LICENSE", "NOTICE", "THIRD_PARTY_NOTICES.md"):
             if z.read("statbridge/legal/" + name) != (root / name).read_bytes():
                 raise ValueError("Missing or stale wheel legal notice: " + name)
+        asset_name = "statbridge/assets/statbridge.svg"
+        if z.read(asset_name) != (root / asset_name).read_bytes():
+            raise ValueError("Wheel application icon missing or stale")
         for path in (root / "statbridge").rglob("*.py"):
             if (
                 "__pycache__" not in path.parts
