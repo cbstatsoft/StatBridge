@@ -26,6 +26,7 @@ from PySide6.QtGui import (
     QKeySequence,
     QFont,
     QFontDatabase,
+    QIcon,
     QPainter,
     QColor,
     QSyntaxHighlighter,
@@ -1370,6 +1371,11 @@ def main():
     app = QApplication.instance() or QApplication(sys.argv)
     app.setApplicationName("StatBridge Qt")
     app.setOrganizationName("StatBridge")
+    icon_path = Path(__file__).resolve().parent / "assets" / "statbridge.svg"
+    if icon_path.is_file():
+        app.setWindowIcon(QIcon(str(icon_path)))
+    if sys.platform.startswith("linux") and hasattr(app, "setDesktopFileName"):
+        app.setDesktopFileName("io.github.cbstatsoft.StatBridge")
     app.setStyle("Fusion")
     window = MainWindow()
     window.show()
