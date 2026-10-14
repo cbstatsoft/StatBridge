@@ -1,0 +1,21 @@
+[
+  "docs/analysis-dialog.png",
+  "docs/core-dark.png",
+  "docs/core-light.png",
+  "docs/dtabnk-dark.png",
+  "docs/dtabnk-light.png",
+  "docs/excel-import.png",
+  "docs/formats-dark.png",
+  "docs/formats-export.png",
+  "docs/formats-light.png",
+  "docs/graph.png",
+  "docs/learn-hausman-dark.png",
+  "docs/learn-hausman-light.png",
+  "docs/learning.png",
+  "docs/results-dark.png",
+  "docs/results-light.png",
+  "docs/roadmap-dark.png",
+  "docs/roadmap-light.png",
+  "docs/workspace.png",
+  "tests/fixtures/readstat-sample.sas7bdat"
+]

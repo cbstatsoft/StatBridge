@@ -1,0 +1,30 @@
+StatBridge Qt
+Copyright (C) 2026 Connor Baird
+
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program. If not, see <https://www.gnu.org/licenses/>.
+
+This notice covers the original StatBridge code, documentation, synthetic
+examples and original interface artwork. Third-party material retains its own
+copyright notices and applicable licences in THIRD_PARTY_NOTICES.md.
+The GPL text in LICENSE is unchanged.
+
+Stata is a registered trademark of StataCorp LLC. StatBridge is independent
+software and is not affiliated with, sponsored by or endorsed by StataCorp LLC.
+References to Stata describe supported syntax and file interoperability only.
+No rights to StataCorp trademarks, software, manuals or other material are
+granted by this project's licence. Other product names belong to their owners.
+
+The release source archive includes the preferred form for modifying this
+program, build instructions, tests and notices. The accompanying wheel is
+built from that source. Dependencies are downloaded separately by pip.
+Redistributors bundling dependencies must meet their respective licences.
+

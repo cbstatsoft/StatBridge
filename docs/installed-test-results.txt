@@ -1,0 +1,1 @@
+Installed StatBridge 0.7.1: 30 lessons and 3 example do-files passed.

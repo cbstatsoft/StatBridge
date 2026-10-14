@@ -1,0 +1,17 @@
+include LICENSE NOTICE THIRD_PARTY_NOTICES.md README.md CHANGELOG.md
+include CONTRIBUTING.md SECURITY.md RELEASE.json launch.py install.py requirements-tested.txt
+include *.bat *.sh
+include .gitignore
+recursive-include benchmarks *.py
+recursive-include statbridge *.py *.csv
+recursive-include statbridge/legal *
+recursive-include docs *.md *.png *.json *.txt
+recursive-include examples *.do *.csv
+recursive-include tests *.py *.sas7bdat PYREADSTAT_LICENSE
+recursive-include tools *.py *.json
+recursive-include .github *.yml *.md
+global-exclude *.pyc *.pyo
+prune build
+prune dist
+prune .venv
+
