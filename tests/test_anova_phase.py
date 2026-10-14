@@ -51,6 +51,30 @@ def test_pairwise_adjustments_against_independent_formulas(one_way, adjustment):
     assert table.iloc[0]["Mean diff."] == pytest.approx(a.mean() - b.mean())
 
 
+def test_pwmean_tukey_kramer(one_way):
+    e = one_way
+    assert e.execute("pwmean y, over(g) mcompare(tukey) level(95)")
+    table = e.results_table
+    assert len(table) == 3
+    assert e.r["mcompare"] == "tukey"
+    assert e.r["N"] == len(e.df)
+    groups = [sub.y.to_numpy() for _, sub in e.df.groupby("g")]
+    a, b = groups[0], groups[1]
+    df_r = len(e.df) - len(groups)
+    mse = sum(((v - v.mean()) ** 2).sum() for v in groups) / df_r
+    se = np.sqrt(mse * (1 / len(a) + 1 / len(b)))
+    q = abs(a.mean() - b.mean()) / (se / np.sqrt(2))
+    expected_p = stats.studentized_range.sf(q, len(groups), df_r)
+    assert table.iloc[0]["Adj. p"] == pytest.approx(expected_p, rel=1e-10)
+    simultaneous = stats.studentized_range.ppf(.95, len(groups), df_r) / np.sqrt(2) * se
+    assert table.iloc[0]["CI upper"] == pytest.approx(a.mean() - b.mean() + simultaneous)
+
+
+def test_pwmean_rejects_invalid_design(one_way):
+    assert not one_way.execute("pwmean y, over(g) mcompare(unknown)")
+    assert not one_way.execute("pwmean y, mcompare(tukey)")
+
+
 def test_oneway_rejects_incompatible_adjustments(one_way):
     assert not one_way.execute("oneway y g, bonferroni scheffe")
     assert not one_way.execute("oneway y g, tukey")
