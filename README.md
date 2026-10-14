@@ -38,6 +38,16 @@ chmod +x install-and-run.sh run.sh run-terminal.sh
 
 For later sessions, run `./run.sh` for the desktop or `./run-terminal.sh` for the terminal interface.
 
+**Linux application menu and i3wm:** Installation now registers a per-user **StatBridge** application shortcut with an icon. It appears in standard desktop application menus, and in Rofi's desktop-application mode on i3wm:
+
+```sh
+rofi -show drun
+```
+
+Select **StatBridge**. The installer does not modify i3 keybindings or require `sudo`. Rofi's `run` mode and default `dmenu_run` list executables, rather than desktop entries; use **`drun`** for this shortcut.
+
+For a manual setup, after creating the local `.venv`, run `python3 tools/linux_shortcut.py install`. To remove the launcher without uninstalling StatBridge, run `python3 tools/linux_shortcut.py uninstall`. To opt out of automatic registration, install using `STATBRIDGE_NO_DESKTOP_SHORTCUT=1 ./install-and-run.sh`. See the [Linux desktop shortcut guide](docs/LINUX_SHORTCUT.md) for XDG paths, troubleshooting, and updating a moved installation.
+
 Linux may also need its distribution's Python venv package and Qt desktop runtime libraries (such as XCB/EGL). See [installation and troubleshooting](#installation-and-troubleshooting) below.
 
 ### Manual Python installation
@@ -57,7 +67,7 @@ On Windows, install the optional `terminal` extra if you want curses support:
 python -m pip install -e ".[terminal]"
 ```
 
-The release build can also be installed from its wheel. **Standalone `.exe` or `.app` bundles are not provided.** [Release and packaging notes](docs/RELEASING.md).
+The release build can also be installed from its wheel. Linux shortcuts installed by the bundled setup target the extracted project's local virtual environment. **Standalone `.exe` or `.app` bundles are not provided.** [Release and packaging notes](docs/RELEASING.md).
 
 ## Your first analysis
 
