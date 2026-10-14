@@ -14,6 +14,8 @@ StatBridge helps students and applied researchers prepare data, run statistical 
 
 ![StatBridge desktop workspace in dark mode](docs/core-dark.png)
 
+The Linux application icon uses an outlined **Σ** symbol.
+
 ## Quick start
 
 **Requirements:** Python **3.11, 3.12, or 3.13** (3.12 is the locally tested interpreter). Windows, macOS, and Linux are supported targets; current native validation is primarily on Linux. The first installation needs internet access to download dependencies. No administrator privileges are required for the application itself.
@@ -91,7 +93,7 @@ This example assumes your dataset has the named variables. For implemented synta
 
 | Area | Capabilities |
 | --- | --- |
-| **Statistical analysis** | OLS, logit/probit, selected GLMs and categorical models, fixed/random effects, IV/2SLS, descriptive tests, time-series and selected survey/survival workflows. |
+| **Statistical analysis** | OLS, logit/probit, selected GLMs and categorical models, fixed/random effects, IV/2SLS, factorial ANOVA and adjusted group comparisons, descriptive tests, time-series and selected survey/survival workflows. |
 | **Data preparation** | Summaries, reshaping, merging, recoding, grouping, filtering, duplicate checks, and selected Polars-accelerated operations. |
 | **Data interchange** | Import/export of Stata, SPSS, R, Parquet, Arrow, Excel, CSV, and additional tabular formats, with format-specific limits. |
 | **Do-files** | Execute supported Stata-like commands, scripts, loops, macros, file navigation, and batch jobs. |
@@ -154,6 +156,7 @@ A successful run exits with status 0; an uncaptured error exits with status 1. A
 | [Compatibility and workflow coverage](docs/COMPATIBILITY.md) | Backend differences, statistical limitations, and validation boundaries |
 | [Dataset formats](docs/FILE_FORMATS.md) | Import/export matrix, metadata preservation, and known losses |
 | [Learning support](docs/LEARNING.md) | Exercises and interpretation guides |
+| [ANOVA and multiple comparisons](docs/ANOVA.md) | Factorial models, pooled tests, Tukey-Kramer and inference limits |
 | [Desktop and terminal](docs/UI_DESIGN.md) · [Terminal](docs/TERMINAL.md) | UI behaviour, controls, and workflows |
 | [Validation](docs/VALIDATION.md) · [Performance](docs/PERFORMANCE.md) | Tests, reproducibility, and Polars benchmarking |
 | [Changelog](CHANGELOG.md) · [Roadmap](docs/ROADMAP.md) | Release history and remaining work |
