@@ -1,3 +1,12 @@
+# Unreleased: next statistical roadmap phase
+
+- Replace the application SVG with a scalable, font-independent Σ logo, used for Linux shortcuts and the Qt window.
+- Extend `anova` from one-way to bounded two-factor classical fixed-effects ANOVA, with optional interactions and explicitly identified partial or sequential SS.
+- Extend `oneway` with Bonferroni, Šidák and Scheffé pooled-variance pairwise contrasts, adjusted p-values and simultaneous intervals.
+- Add `pwmean` with unequal-size Tukey-Kramer, Bonferroni, Šidák and Scheffé adjustments.
+- Add command documentation and synthetic regression tests. Tests for this unreleased phase have not yet been executed in the validated build environment.
+- Remaining work includes Stata partial-SS numerical validation, repeated-measures/factorial extensions, and advanced survey, mixed-model, multiple-imputation and staggered-DiD inference.
+
 # 0.7.1 - Public beta preparation (14 October 2026)
 
 - Identify Connor Baird as author/copyright holder and retain GNU GPL version 3 or later.
