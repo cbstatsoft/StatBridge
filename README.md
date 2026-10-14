@@ -89,7 +89,7 @@ xtset country year
 xtreg income education i.year, fe vce(cluster country)
 ```
 
-This example assumes your dataset has the named variables. For implemented syntax, use `help command` in StatBridge or consult the [command reference](docs/COMMANDS.md). Other runnable examples are in `examples/`.
+This example assumes your dataset has the named variables. A new synthetic ANOVA walkthrough is in [`examples/anova_phase.do`](examples/anova_phase.do), covering group comparisons and factorial effects. For implemented syntax, use `help command` in StatBridge or consult the [command reference](docs/COMMANDS.md). Other runnable examples are in `examples/`.
 
 ## What StatBridge can do
 
