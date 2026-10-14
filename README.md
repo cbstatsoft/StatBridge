@@ -1,4 +1,4 @@
-# StatBridge Qt 0.7.1
+# StatBridge
 
 [![Python 3.11–3.13](https://img.shields.io/badge/Python-3.11%E2%80%933.13-3776AB?logo=python&logoColor=white)](https://www.python.org/downloads/)
 [![GPL-3.0-or-later](https://img.shields.io/badge/licence-GPL--3.0--or--later-A42E2B?logo=gnu&logoColor=white)](LICENSE)
@@ -6,69 +6,64 @@
 ![Linux](https://img.shields.io/badge/Linux-supported-FCC624?logo=linux&logoColor=black)
 ![macOS](https://img.shields.io/badge/macOS-supported-000000?logo=apple&logoColor=white)
 
-**Public beta** by **Connor Baird**, licensed under **GNU GPL v3 or later**.
+**An open-source statistical workspace with a Stata-inspired command interface, a Qt6 desktop application, and a curses terminal mode.**
 
-A Python/Qt6 statistical workspace with a documented subset of Stata syntax, a desktop interface and a curses terminal mode. It uses Polars and established Python statistical libraries, reads .dta/.do files, and reports implementation differences alongside results. Optional offline Learn exercises help students practise and interpret results.
+StatBridge helps students and applied researchers prepare data, run statistical analyses, work with do-files, and interpret results using Python statistical libraries. It offers contextual command completion, multi-format data import/export, and 30 optional offline learning exercises. No Stata installation, licence key, account, or online service is required after the Python dependencies have been installed.
 
-StatBridge is independent software, not affiliated with, sponsored by or endorsed by StataCorp LLC. Stata is a registered trademark of StataCorp LLC. No Stata installation or licence is required. [Licence and provenance](docs/LICENSING.md).
+**Project status: public beta.** StatBridge implements documented subsets of Stata syntax, **not complete Stata compatibility or verified numerical parity**. Unsupported options and known backend differences are documented, with many unsupported cases rejected explicitly. Read the [compatibility contract](docs/COMPATIBILITY.md) and [workflow coverage and limits](docs/EVERYDAY_COVERAGE.md) before relying on results. [See what's changed](CHANGELOG.md).
 
-**Compatibility is partial.** There are 154 catalogue entries, including utilities and extensions, with specific syntax subsets. This is not a measured percentage of Stata functionality. Mixed models, multiple imputation and complex survey workflows remain substantial gaps. See [workflow coverage](docs/EVERYDAY_COVERAGE.md), [file formats and fidelity](docs/FILE_FORMATS.md) and the [updated roadmap](docs/ROADMAP.md).
+![StatBridge desktop workspace in dark mode](docs/core-dark.png)
 
-This release adds clearer installation checks, offline licence notices, privacy-conscious installation diagnostics, and a verified source/wheel build. The 0.7 statistical features and all 30 Learn lessons remain available. See [CHANGELOG.md](CHANGELOG.md).
+## Quick start
 
-![StatBridge workspace](docs/core-dark.png)
+**Requirements:** Python **3.11, 3.12, or 3.13** (3.12 is the locally tested interpreter). Windows, macOS, and Linux are supported targets; current native validation is primarily on Linux. The first installation needs internet access to download dependencies. No administrator privileges are required for the application itself.
 
-## Start on Windows
+### Windows
 
-1. Install Python 3.11, 3.12 or 3.13 from [python.org](https://www.python.org/downloads/). Python 3.12 is the tested interpreter.
-2. Extract this archive into a normal writable directory.
-3. Double-click `Install-and-Run.bat`. It creates a local `.venv`, installs dependencies, and launches StatBridge.
-4. Subsequently, double-click `Run.bat`.
+1. [Download the repository ZIP](https://github.com/cbstatsoft/StatBridge/archive/refs/heads/master.zip) and extract it to a writable folder.
+2. Install a supported version of [Python](https://www.python.org/downloads/) if needed.
+3. Double-click **`Install-and-Run.bat`** to create the local virtual environment, install dependencies, and open StatBridge.
+4. For later sessions, double-click **`Run.bat`**. Use **`Run-Terminal.bat`** for the curses interface.
 
-No administrator privileges are needed for the application installation. The first installation needs internet access to obtain Python packages. The installer prefers Python 3.12, then 3.13, then 3.11 through the Windows `py` launcher, with `python` as a fallback. You can explicitly select an interpreter with `py -3.12 install.py`.
+### macOS and Linux
 
-## Start on macOS or Linux
-
-Install Python 3.11 to 3.13 and run from the extracted directory:
+Download and extract the repository, or clone it:
 
 ```sh
-chmod +x install-and-run.sh run.sh
+git clone https://github.com/cbstatsoft/StatBridge.git
+cd StatBridge
+chmod +x install-and-run.sh run.sh run-terminal.sh
 ./install-and-run.sh
 ```
 
-After installation:
+For later sessions, run `./run.sh` for the desktop or `./run-terminal.sh` for the terminal interface.
 
-```sh
-./run.sh
-```
+Linux may also need its distribution's Python venv package and Qt desktop runtime libraries (such as XCB/EGL). See [installation and troubleshooting](#installation-and-troubleshooting) below.
 
-On Linux, the Python venv package and the system libraries required by Qt must be present. A Qt platform-plugin error usually indicates missing desktop runtime libraries, such as EGL or XCB libraries. Use your distribution's package manager to install those libraries. This is a desktop application; it does not require a web server.
+### Manual Python installation
 
-## Manual installation
+From the project directory:
 
 ```sh
 python -m venv .venv
-# Windows:
-.venv\Scripts\python -m pip install -e .
-.venv\Scripts\python -m statbridge
-# macOS / Linux:
-.venv/bin/python -m pip install -e .
-.venv/bin/python -m statbridge
+# Activate the environment for your shell, then:
+python -m pip install -e .
+python -m statbridge
 ```
 
-The archive also contains a wheel under `dist/`. Installing that wheel with pip provides the `statbridge` and `statbridge-gui` entry points. Dependencies are downloaded separately. This release does not include standalone Windows/macOS executables.
+On Windows, install the optional `terminal` extra if you want curses support:
 
-## Confirm the running release
+```powershell
+python -m pip install -e ".[terminal]"
+```
 
-This archive contains **0.7.1 public beta**. Extract it into a new folder and use its launchers. The launchers load the package beside `launch.py` and reject missing or mismatched bundled files, even when an older installation exists elsewhere. Existing desktop shortcuts and globally installed `statbridge` commands may still target a previous installation.
+The release build can also be installed from its wheel. **Standalone `.exe` or `.app` bundles are not provided.** [Release and packaging notes](docs/RELEASING.md).
 
-Before opening the GUI, run `./run.sh --version` on Linux/macOS or `Run.bat --version` on Windows. After installation, `python launch.py --version` also reports the bundled version. The GUI title keeps the version visible. Enter `about` to show the version and application folder.
+## Your first analysis
 
-## First session
+In the desktop application, select **File > Open do-file**, open `examples/demo.do`, then press **Ctrl+D**. The example uses synthetic data to demonstrate summary statistics, robust OLS, predictions, panel fixed effects, and a histogram. No external dataset is required.
 
-Use File > Open do-file and select `examples/demo.do`, then press **Ctrl+D**. It creates synthetic data and runs summary statistics, robust OLS, predictions, panel fixed effects and a histogram. No external data are needed. `examples/panel.do` and `examples/do_language.do` show panel models and scripting.
-
-Or type Stata syntax directly:
+You can also enter commands directly:
 
 ```stata
 use "mydata.dta", clear
@@ -76,145 +71,111 @@ summarize income education, detail
 regress income education experience i.region, vce(robust)
 estimates store ols
 predict fitted
-predict residual, residuals
 xtset country year
 xtreg income education i.year, fe vce(cluster country)
 ```
 
-All examples use exact implemented syntax. Check `help command` inside the application or [the command reference](docs/COMMANDS.md) before running an existing do-file.
+This example assumes your dataset has the named variables. For implemented syntax, use `help command` in StatBridge or consult the [command reference](docs/COMMANDS.md). Other runnable examples are in `examples/`.
 
-## Workspace controls
+## What StatBridge can do
 
-| Control | Action |
+| Area | Capabilities |
 | --- | --- |
-| Enter | Run the Command field |
-| Right arrow or End, at the end of input | Accept the grey inline suggestion |
-| Tab | Complete a unique match, extend the common prefix, or open choices; Tab again accepts the selected choice |
-| Up / Down | Recall command history |
-| Double-click Review | Put that command back into the Command field |
-| Double-click a variable | Insert its name into the Command field |
-| Ctrl+D | Run selected do-file text, or the entire editor if nothing is selected |
-| Ctrl+S | Save the current do-file |
-| Ctrl+O | Open a `.dta` dataset |
-| Ctrl+Shift+O | Open a do-file |
-| Ctrl+Shift+S | Save the dataset as `.dta` |
-| F1 | Display implemented command reference |
-| Stop | Stop between commands or bootstrap replications |
-| Learn | Show or hide optional guided practice and command explanations |
+| **Statistical analysis** | OLS, logit/probit, selected GLMs and categorical models, fixed/random effects, IV/2SLS, descriptive tests, time-series and selected survey/survival workflows. |
+| **Data preparation** | Summaries, reshaping, merging, recoding, grouping, filtering, duplicate checks, and selected Polars-accelerated operations. |
+| **Data interchange** | Import/export of Stata, SPSS, R, Parquet, Arrow, Excel, CSV, and additional tabular formats, with format-specific limits. |
+| **Do-files** | Execute supported Stata-like commands, scripts, loops, macros, file navigation, and batch jobs. |
+| **Interfaces** | Qt6 workspace and data editor, variable-selection analysis forms, command completion, dark/light themes, and curses terminal UI. |
+| **Learning** | 30 optional offline exercises and statistical test-interpretation guidance, including FE/RE and Hausman testing. |
+| **Reproducibility** | Structured result exports, compatibility notices, optional JSON audit reports, and example datasets/scripts. |
 
-The interface stays responsive during estimation by running commands in a worker thread. A single backend optimisation cannot be forcibly cancelled; Stop takes effect when that call returns. Closing is blocked while a worker is active. Direct numeric and simple string edits in the Data editor generate auditable `replace` commands. Sorting in the grid is intentionally not a hidden mutation: use `sort` or `gsort`.
+The command catalogue includes bounded syntax subsets and StatBridge extensions. Command presence does not mean full Stata option coverage. See [supported workflows](docs/EVERYDAY_COVERAGE.md), [command syntax](docs/COMMANDS.md), and [worked examples](docs/ROADMAP_WORKFLOWS.md).
 
-Window layout, working directory and the last 1,000 commands are retained in local Qt settings. Datasets and do-file contents are not automatically saved. Command history may contain filenames, expressions and entered values. No datasets or commands are sent to an online service by the application.
+### Dataset formats
 
-## Context-aware command completion
+The import dialog supports previews without replacing the current dataset. Common supported formats include:
 
-Tab uses the live dataset and the syntax around the cursor. It offers numeric columns for regression and numeric summaries, string columns for `encode`, expressions after `=` or `if`, and the relevant values inside options such as `vce()` or `family()`. After `vce(cluster ` it suggests loaded variables. Variable lists avoid repeating variables already entered.
+- Stata `.dta`; SPSS/PSPP `.sav`, `.zsav`, `.por`; SAS `.sas7bdat` and `.xpt` (with different read/write capabilities).
+- R `.RData`, `.rda`, `.rds`; Parquet, Feather, and Arrow IPC.
+- Excel `.xlsx`, `.xls`, `.xlsm`, `.xlsb`; OpenDocument `.ods`; CSV/TSV and flat JSON.
+- SQLite, plus restricted MATLAB, HDF5, and legacy Minitab portable numeric-table formats.
 
-Completion understands aliases, `quietly`/`capture`, `by` prefixes, factor terms, lags, weights, fitted coefficients, stored estimates, result names and macros. It does not suggest existing variables where you must supply a new name, such as `generate newname` or `predict newname`. Local paths are completed for cd/ls/do/run/use/save/mkdir and their navigation aliases. Other free text and numeric option values remain yours to enter.
+**Import and export support is not always symmetrical.** Labels, special missing values, date types, attributes, and precision may change when converting formats. Consult the [format-by-format compatibility matrix and fidelity warnings](docs/FILE_FORMATS.md) before converting important data. `.do` files are scripts rather than datasets.
 
-You can move the cursor back into a command and complete a variable without losing the following text. Suggestions refresh when the dataset or model changes. See [COMPLETION.md](docs/COMPLETION.md) for examples and scope.
+### Statistical limitations
 
-## Finding files and changing folders
+StatBridge delegates calculations to libraries such as NumPy, SciPy, statsmodels, and linearmodels. Estimation conventions, variance estimators, convergence criteria, and output can differ from Stata. Some capabilities are intentionally narrow; for example:
 
-Use `ls` (or `dir`) to see the current folder, `pwd` to print its path, and `cd "folder"` to move into a directory. `cd ..` goes up, `cd ~` goes home, and `cd -` returns to the previous folder. `findfile "test_analysis.do"` searches this directory and its subfolders and prints the containing-folder command for a unique match. This handles ZIPs extracted into an extra nested folder.
+- Hausman FE/RE comparisons are guarded and can be invalid under some covariance choices.
+- Survey commands cover specified one-stage designs, not general complex surveys.
+- Survival and categorical-model procedures support selected specifications.
+- Multiple imputation, many mixed-model workflows, and several advanced estimators remain outside the implemented scope.
 
-The toolbar and File menu provide **Choose working folder**. After opening a do-file, **File > Use do-file folder** sets its containing folder as the working directory. Tab now completes filenames and folders in supported file-command positions, including quoted paths with spaces. See [NAVIGATION.md](docs/NAVIGATION.md) for examples and search limits.
+Check the [compatibility contract](docs/COMPATIBILITY.md), [workflow coverage](docs/EVERYDAY_COVERAGE.md), and [roadmap](docs/ROADMAP.md). StatBridge does not run a licensed copy of Stata behind the scenes.
 
-## New in 0.4.0
+## Interfaces and automation
 
-- Factor/interaction-aware OLS, logit and probit `margins`, with `at()`, `over()`, derivatives, discrete factor changes, delta-method intervals and `marginsplot`.
-- `etable`, bounded `esttab`, and numeric `dtable`, with CSV/HTML/LaTeX export. The Results menu copies or exports the latest structured table.
-- Balanced-panel `xtreg, cre` and `estat mundlak`; IV `estat firststage`, `estat endogenous` and bounded `estat overid`.
-- `.xlsx` import/export with sheet/range controls and literal strings, 18 date/conversion functions, and daily/monthly/quarterly/clock display in the data grid and `list`.
-- `twoway` scatter/line/lfit layers, `rvfplot` and `qnorm`.
-- Categorical `reghdfe` with singleton removal and one/two-way clustering; balanced two-period `didregress`/`xtdidregress` subsets.
+**Desktop:** The Qt6 interface includes a do-file editor, data grid, results pane, command history, variable lists, analysis dialogs, and contextual completion. **Enter** runs the command field; **Ctrl+D** runs selected do-file text (or the whole editor); **Ctrl+S** saves the script; **F1** opens help. Completion can suggest commands, variable names, options, and supported paths. See [completion](docs/COMPLETION.md), [file navigation](docs/NAVIGATION.md), and [UI behaviour](docs/UI_DESIGN.md).
 
-Read the command help and compatibility notices. Full Stata syntax, unbalanced CRE corrections, clustered IV overidentification, weak-IV-robust intervals and staggered/heterogeneous DiD are not implemented. The application refuses unsupported cases instead of silently substituting a different test.
+**Terminal:** The curses workspace uses the same statistical engine without loading Qt. It supports history, tab completion, data/do-files, and scrollable output:
 
-## Optional learning support
+```sh
+python -m statbridge --terminal
+```
 
-Click **Learn** in the toolbar or Help menu. It is off by default; the setting is remembered. All analysis commands, data tools and do-file features remain available with teaching on or off. There are no account requirements, licence keys or paid feature tiers. After package installation, lessons and analysis work offline.
+On Windows, use `Run-Terminal.bat` or install `.[terminal]`. See the [terminal guide](docs/TERMINAL.md).
 
-Twenty-four searchable guided exercises cover data preparation, regression, interactions, prediction, logit, FE/RE Hausman comparisons, RESET, mean comparisons and IV. Each includes synthetic data, a hint, a suggested solution, a reflection question and a check of the current result. **Explain** interprets supported test results, including rejection, non-rejection and invalid Hausman comparisons. **Tests** contains thirteen offline reference guides. Checks and explanations do not change your data or rerun estimation.
-
-See [roadmap implementation status](docs/ROADMAP.md) for the new command subsets and remaining boundaries, and [worked workflows](docs/ROADMAP_WORKFLOWS.md) for examples.
-
-Opening an example fills the do-file editor. Running its clearly labelled setup replaces the in-memory dataset, so save your data first. See [the learning guide](docs/LEARNING.md) and editable scripts in `examples/lessons/`.
-
-![Optional Learn panel](docs/learning.png)
-
-## Statistical coverage
-
-- OLS, HC1/HC2/HC3 robust covariance, one-way clustered covariance; analytic, frequency and probability weights with supported covariance choices; coefficient tests, linear combinations, VIF, Breusch-Pagan, Ramsey RESET, out-of-sample unweighted OLS predictions and selected influence diagnostics.
-- Binary logit/logistic/probit; Poisson and NB2; quantile regression; selected GLMs.
-- IV/2SLS; panel fixed/random effects; stored estimates and a guarded classical Hausman test.
-- Summary statistics and grouped tabstat, quantiles, one/two-way tabulations, one-factor ANOVA, chi-square, Pearson/Spearman correlations, t-tests, rank-sum, signed-rank and Shapiro-Wilk tests.
-- Single-effect absorbed OLS (areg), linear equality tests and coefficient-set tests.
-- PCA eigenvalues/loadings; single-series ADF and nonseasonal ARIMA.
-- Histograms, scatterplots and lines; PNG/PDF/SVG exports.
-- Sampling with/without replacement; IID bootstrap of one regression coefficient.
-- Time operators L/F/D/S in expressions and model terms, including second differences, panel boundaries, gaps and a declared time delta.
-
-The [compatibility guide](docs/COMPATIBILITY.md) distinguishes what is matched, approximated, limited or rejected. Its limitations are part of the software's contract.
-
-## Polars data processing
-
-Polars now handles large supported `sort`, `gsort`, `duplicates`, `collapse` and grouped `egen` operations. The default `auto` mode uses Polars from 100,000 rows and pandas for smaller inputs or unsupported accelerated types. Only required columns cross the boundary. Sorting and duplicate removal retain untouched column dtypes and metadata.
-
-Use `set databackend polars` to request Polars for supported operations at any size, `set databackend pandas` for the reference implementation, or `set databackend auto` to restore automatic selection. This setting is a StatBridge extension. Each operation records its chosen backend and selection reason in the audit. Explicit Polars mode fails if a required column type is unsupported; auto records its pandas fallback.
-
-The data editor, expression interpreter, DTA I/O and model interfaces still use pandas/NumPy. This is a targeted acceleration layer, not a fully Polars-native or out-of-core engine. Benchmarks include conversion costs; actual gains depend on data and hardware. See [PERFORMANCE.md](docs/PERFORMANCE.md) for measurements and a reproducible benchmark.
-
-## Data and do-files
-
-`.dta` import/export retains variable labels, value labels, dataset labels and display formats where ReadStat supports them. Dates stay in Stata's numeric units. Extended missing tags `.a` through `.z` are normalised to ordinary missing **with a warning**, so this is not a lossless archival editor. Existing files require `replace` to overwrite; GUI save dialogs confirm overwrites. `.dta` saves use an adjacent temporary file before replacing the destination.
-
-Do-files support UTF-8/BOM, comments, `///` continuation, simple local/global macros, `foreach`, `forvalues`, `if`/`else` blocks, `#delimit ;`/`#delimit cr`, `by`/`bysort` for selected commands, `quietly`, `noisily`, `capture`, and nested `do`/`run`. Execution stops at the first uncaptured error. Changes made by earlier successful commands remain in memory. Relative paths resolve against the session working directory, shown in the status bar. Opening a do-file does not change that directory.
-
-The interpreter is implemented in Python with a restricted expression parser. It does not translate Stata text into executable Python and does not use Python `eval`/`exec`. Do-files can still read and write local files through the supported data/log/export commands, including explicit `replace` operations.
-
-## Terminal and desktop interfaces
-
-Use `python -m statbridge --terminal` (or `--tui`) for a curses workspace with scrollable results, history, contextual completion, DTA files and do-files. Qt is not imported in terminal mode. On Windows install `.[terminal]` or double-click `Run-Terminal.bat`. After the normal installation, macOS/Linux can use `./run-terminal.sh`. See [TERMINAL.md](docs/TERMINAL.md) for keys and independent history/folder preferences.
-
-Desktop toolbar actions now have icons, short labels, visible interaction states and grouped controls. **Analyse** opens variable-selection dialogs for regression, panel fixed effects, binary logit, IV/2SLS and histograms. Run executes the generated syntax; Insert in do-file keeps it for reuse. F6 cycles workspace panes, and Ctrl+L focuses Command. See [UI_DESIGN.md](docs/UI_DESIGN.md) for the researched design decisions and limits.
-
-## Batch operation
+**Batch:** Run supported scripts without a graphical display and optionally write a JSON audit:
 
 ```sh
 python -m statbridge --batch examples/demo.do --audit audit.json
 python -m statbridge --batch analysis.do --cwd /path/to/project --audit audit.json
 ```
 
-Exit status is 0 on completion and 1 on an uncaptured error. Batch mode requires no display and does not import the Qt interface. Use `graph export` in the script to save figures. Use `log using "session.log", text` and `log close` for plain-text logs. `compatibility export "report.json"` also writes an audit from the command line.
+A successful run exits with status 0; an uncaptured error exits with status 1. Audit logs and command history can contain user-entered information or paths, so inspect them before sharing.
 
-## Development and validation
+**Learning:** Click **Learn** in the desktop toolbar or Help menu to display optional exercises and explanations. It is disabled by default and never restricts the analysis features. See the [learning guide](docs/LEARNING.md).
+
+## Documentation
+
+| Guide | Contents |
+| --- | --- |
+| [Getting started with commands](docs/COMMANDS.md) | Implemented command syntax and supported options |
+| [Compatibility and workflow coverage](docs/COMPATIBILITY.md) | Backend differences, statistical limitations, and validation boundaries |
+| [Dataset formats](docs/FILE_FORMATS.md) | Import/export matrix, metadata preservation, and known losses |
+| [Learning support](docs/LEARNING.md) | Exercises and interpretation guides |
+| [Desktop and terminal](docs/UI_DESIGN.md) · [Terminal](docs/TERMINAL.md) | UI behaviour, controls, and workflows |
+| [Validation](docs/VALIDATION.md) · [Performance](docs/PERFORMANCE.md) | Tests, reproducibility, and Polars benchmarking |
+| [Changelog](CHANGELOG.md) · [Roadmap](docs/ROADMAP.md) | Release history and remaining work |
+
+GitHub provides a page outline from the headings above; the linked guides contain the more detailed references.
+
+## Installation and troubleshooting
+
+- To verify the checked-out release, run `python launch.py --version`, `./run.sh --version` (macOS/Linux), or `Run.bat --version` (Windows).
+- To inspect installed dependency versions and missing packages, run `python launch.py --doctor`. `--doctor --json` produces local-only machine-readable diagnostics without reading your datasets or contacting a service.
+- If a Linux Qt platform plugin fails to load, install the distribution's missing desktop runtime libraries. On Windows, terminal mode requires `windows-curses`.
+- Use the bundled launcher when several installations coexist. An old shortcut or global command may launch another copy. Install updated archives in fresh folders.
+- Before running another person's do-file, review it: supported file commands can read or overwrite local files. Scripts and datasets are not automatically saved.
+
+See [release instructions](docs/RELEASING.md) and [security and privacy guidance](SECURITY.md).
+
+## Contributing and reporting issues
+
+Contributions, reproducible bug reports, tests, and corrections to compatibility documentation are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md). To set up a development checkout:
 
 ```sh
 python -m pip install -e ".[dev]"
 python -m pytest -q
 ```
 
-See [VALIDATION.md](docs/VALIDATION.md) and the release's [test output](docs/test-results.txt) for results and limitations. Linux/Python 3.12 was exercised locally, including Qt offscreen interaction. Windows/macOS CI and native desktop checks remain to be run; no licensed Stata parity comparison was performed. A cross-platform CI configuration is included.
+Please [open an issue](https://github.com/cbstatsoft/StatBridge/issues) with the affected command, expected and observed behaviour, platform details, and a **minimal synthetic** dataset/do-file. Avoid uploading private datasets, command history, or unreviewed logs. Native Windows/macOS validation and licensed Stata parity comparisons have not been completed; see [validation notes](docs/VALIDATION.md). For security issues, follow [SECURITY.md](SECURITY.md).
 
-Build a release with `python tools/build_release.py --output ../artifacts`. It runs the tests, validates versions and licence resources, and packages source, wheel and sdist together. From an extracted release, `python tools/verify_release.py` checks packaged file hashes. See [release instructions](docs/RELEASING.md).
+## Licence and independence
 
-The interpreter and GUI are separate. `data_backend.py` supplies Polars operations and auditable backend selection. `catalog.py` supplies shared command help and completions; `syntax.py` parses syntax; `data.py`, `common_data.py`, `models.py` and `common_models.py` implement translations; `engine.py` manages the session, do-files and audit; `ui.py` supplies Qt widgets and worker execution.
+Copyright (C) 2026 **Connor Baird**. StatBridge is free software under the **GNU General Public License, version 3 or later**. See [LICENSE](LICENSE), [NOTICE](NOTICE), and [third-party notices](THIRD_PARTY_NOTICES.md).
 
-Copyright (C) 2026 Connor Baird. GNU GPL version 3 or later; see LICENSE, NOTICE and THIRD_PARTY_NOTICES.md. Open Help > Licence and third-party notices, type `license`, or run `python launch.py --license` for the offline notices. No warranty is provided under the terms of the GPL.
-
-
-## Installation help and reporting problems
-
-Run `python launch.py --doctor` (or `Run.bat --doctor` / `./run.sh --doctor`) for package versions and missing dependencies. `--doctor --json` provides machine-readable output. It does not load Qt, inspect datasets, read history, collect personal paths or contact a server. The GUI has the same report under Help > Installation diagnostics. This is a metadata check, not a native-library or display test.
-
-If you have a different installed version, use this archive's launcher and `--version`. Install each update in a fresh folder. Existing history, theme and working-folder preferences remain persistent; they do not prove that an old application is running. Their existing opt-out controls remain available.
-
-For a Qt platform-plugin error on Linux, install your distribution's Qt runtime prerequisites. For terminal mode on Windows use Run-Terminal.bat to install windows-curses. Source/wheel installations require a supported Python; no standalone .exe or .app installer is included.
-
-Batch `--batch` and `--audit` paths are relative to the directory where you invoke the command. `--cwd` controls paths used inside the do-file. An unreadable script, invalid working directory or unwritable audit path produces a nonzero exit status. An audit cannot overwrite its input do-file. Audit files otherwise replace an existing file at the named path, so choose a report filename.
-
-Use the host repository's issue tracker when available. Include a minimal synthetic do-file and diagnostics, and review logs/audits before sharing because they can contain commands and file paths. See [contributing](CONTRIBUTING.md) and [security/privacy](SECURITY.md).
+StatBridge is **independent software** and is not affiliated with, sponsored by, or endorsed by StataCorp LLC. Stata is a registered trademark of StataCorp LLC. Read [licensing and provenance](docs/LICENSING.md) for details.
 
 ---
 
