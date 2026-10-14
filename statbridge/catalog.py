@@ -528,6 +528,11 @@ COMMANDS.update(
         ),
     }
 )
+COMMANDS["pwmean"] = (
+    "pwmean y, over(group) [mcompare(tukey|bonferroni|sidak|scheffe) level(95)]",
+    "SciPy / pooled-variance OLS",
+    "Unweighted group means and adjusted pairwise contrasts. Tukey-Kramer for unequal sizes; other methods use pooled-MSE t or F. No Welch, clustered or repeated measures.",
+)
 COMMANDS["egen"] = (
     "egen new = function(varlist) [, by(group)]",
     "Polars/pandas/NumPy",
