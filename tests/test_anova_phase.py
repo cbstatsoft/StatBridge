@@ -151,6 +151,13 @@ def test_rejects_unsupported_factorial_specifications(factorial, syntax):
     assert not factorial.execute(syntax)
 
 
+def test_large_factorial_preflight_rejects_before_fitting():
+    e = Engine()
+    e.df = pd.DataFrame({"y": np.arange(300.0), "a": np.arange(300)})
+    assert not e.execute("anova y a")
+    assert e.model is None
+
+
 def test_sigma_is_a_path_based_svg():
     from pathlib import Path
     svg = (Path(__file__).resolve().parents[1] /
