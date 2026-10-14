@@ -47,6 +47,14 @@ def main():
         subprocess.run(
             [str(executable), "-m", "pip", "install", "-e", extra], cwd=root, check=True
         )
+        if sys.platform.startswith("linux") and os.environ.get("STATBRIDGE_NO_DESKTOP_SHORTCUT") != "1":
+            try:
+                subprocess.run(
+                    [str(executable), str(root / "tools" / "linux_shortcut.py"), "install"],
+                    cwd=root, check=True,
+                )
+            except (OSError, subprocess.CalledProcessError) as exc:
+                print(f"Optional Linux application shortcut could not be installed: {exc}", file=sys.stderr)
         return subprocess.run(
             [str(executable), str(root / "launch.py"), *sys.argv[1:]],
             cwd=root,
