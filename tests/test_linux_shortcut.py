@@ -4,6 +4,7 @@
 from pathlib import Path
 import tempfile
 import unittest
+import sys
 
 from tools.linux_shortcut import (
     DESKTOP_FILENAME, desktop_path, install_shortcut, render_desktop_entry,
@@ -11,6 +12,7 @@ from tools.linux_shortcut import (
 )
 
 
+@unittest.skipUnless(sys.platform.startswith("linux"), "Linux desktop entry tests")
 class LinuxShortcutTests(unittest.TestCase):
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory()
