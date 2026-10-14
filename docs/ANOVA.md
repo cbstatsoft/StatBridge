@@ -4,6 +4,8 @@ StatBridge implements a **bounded, unweighted, classical** set of fixed-effects 
 
 ## Commands
 
+For a ready-to-run self-contained synthetic script, use [`examples/anova_phase.do`](../examples/anova_phase.do) from the repository working directory.
+
 ```stata
 oneway score group, tabulate
 oneway score group, bonferroni
