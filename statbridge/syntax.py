@@ -154,6 +154,7 @@ def options(text, allowed=()):
             "delimiter",
             "encoding",
             "level",
+            "mcompare",
             "by",
             "generate",
             "ignore",
