@@ -34,4 +34,4 @@ include = ["statbridge*"]
 testpaths = ["tests"]
 
 [tool.setuptools.package-data]
-statbridge = ["sample_data/*.csv", "legal/*"]
+statbridge = ["sample_data/*.csv", "assets/*.svg", "legal/*"]
