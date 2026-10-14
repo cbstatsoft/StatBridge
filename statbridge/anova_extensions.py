@@ -111,7 +111,7 @@ class AnovaExtensions:
             "POSTHOC_POOLED",
             "Pairwise tests assume independent observations, normal homoskedastic "
             "errors and a pooled within-group MSE. Intervals are simultaneous "
-            "under the requested Bonferroni, Sidak or Scheffe adjustment; "
+            "under the requested Tukey-Kramer, Bonferroni, Sidak or Scheffe adjustment; "
             "these are not Welch, clustered, or repeated-measures comparisons.",
         )
 
