@@ -53,6 +53,7 @@ def _exec_argument(value: str) -> str:
 
 def render_desktop_entry(root: Path) -> str:
     root = root.resolve()
+    _check_text(str(root))
     python = root / ".venv" / "bin" / "python"
     launcher = root / "launch.py"
     icon = root / "statbridge" / "assets" / "statbridge.svg"
