@@ -49,7 +49,7 @@ The accepted grammar is `anova response factor1 [factor2] [factor1#factor2] [, p
 - **`sequential`** uses term-by-term (Type I) residual SS reductions **in the order entered**. The reported effects are order-dependent in unbalanced designs.
 - **`partial`**, the default, removes each term in turn from the full reference-coded design (conditional or drop-term SS). Main-effect results in a model that also includes interactions can depend on the choice of reference category. These **are not guaranteed numerically equivalent to Stata's default partial SS** in interacted/unbalanced designs.
 
-In particular, these are **not generalized repeated-measures or random-effects ANOVA procedures**. Missing factorial cells, collinear design matrices, insufficient residual degrees of freedom, zero residual variance, weights, and unsupported options are rejected rather than approximated. `anova` does not implement `margins` or `pwcompare` postestimation for this fitted-model command.
+In particular, these are **not generalized repeated-measures or random-effects ANOVA procedures**. Missing factorial cells, collinear design matrices, insufficient residual degrees of freedom, zero residual variance, weights, and unsupported options are rejected rather than approximated. A preflight guard refuses estimated indicator designs over **256 columns or 5 million design cells**, before allocating the full model matrix. `anova` does not implement `margins` or `pwcompare` postestimation for this fitted-model command.
 
 ## Why the distinction matters
 
