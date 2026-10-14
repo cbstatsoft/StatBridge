@@ -502,14 +502,14 @@ COMMANDS.update(
             "Unweighted per-variable and grouped descriptive tables; default quantile convention. Returns N, not Stata's saved matrices.",
         ),
         "oneway": (
-            "oneway response group [, tabulate]",
+            "oneway response group [, tabulate bonferroni|sidak|scheffe]",
             "NumPy/SciPy",
-            "Classical equal-variance one-way ANOVA, optionally group counts/means/SDs; no Bartlett or post-hoc comparisons.",
+            "Classical equal-variance one-way ANOVA, optionally group summaries and pooled-variance Bonferroni, Sidak or Scheffe post-hoc comparisons; no Bartlett/Welch or repeated measures.",
         ),
         "anova": (
-            "anova response group",
-            "statsmodels OLS",
-            "One categorical factor only; reports ANOVA and stores an equivalent indicator-regression model.",
+            "anova response factor1 [factor2] [factor1#factor2] [, partial|sequential]",
+            "statsmodels OLS / NumPy",
+            "One/two categorical factors with optional two-way interaction; partial drop-term or ordered sequential SS. Reference-coded partial main effects with interaction may differ from Stata. No repeated measures/weights.",
         ),
         "areg": (
             "areg response predictors, absorb(group) [vce(robust) level(#)]",
