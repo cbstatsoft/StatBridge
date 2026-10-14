@@ -1,6 +1,6 @@
 # StatBridge
 
-![StatBridge Σ logo](statbridge/assets/statbridge.svg)
+<img src="statbridge/assets/statbridge.svg" alt="StatBridge Σ logo" width="80" height="80">
 
 [![Python 3.11–3.13](https://img.shields.io/badge/Python-3.11%E2%80%933.13-3776AB?logo=python&logoColor=white)](https://www.python.org/downloads/)
 [![GPL-3.0-or-later](https://img.shields.io/badge/licence-GPL--3.0--or--later-A42E2B?logo=gnu&logoColor=white)](LICENSE)
