@@ -166,8 +166,26 @@ class AnovaExtensions:
         if len(response) != 1:
             raise StataError("One numeric response variable required")
         terms, factors = _anova_terms(tokens[1:])
+        frame = self.df.loc[self.mask(q)]
+        levels = {}
         for name in factors:
             self.varlist(name, numeric=True)
+            raw = frame[name].dropna()
+            if (not np.isfinite(raw.to_numpy(dtype=float)).all()
+                    or raw.lt(0).any()
+                    or raw.ne(np.floor(raw)).any()):
+                raise StataError("ANOVA factors must be finite nonnegative integers")
+            levels[name] = int(raw.nunique())
+            if levels[name] < 2:
+                raise StataError(f"Factor {name} needs at least two observed categories")
+        width = 1
+        for term in terms:
+            width += int(np.prod([levels[a] - 1 for a in term.split("#")]))
+        if width > 256 or len(frame) * width > 5_000_000:
+            raise StataError(
+                "ANOVA indicator design exceeds 256 columns or 5 million "
+                "cells; reduce the sample/factor categories before fitting"
+            )
         fit_tokens = ["i." + term.replace("#", "#i.") for term in terms]
         suffix = "".join(f" {key} {value}" for key, value in q.items())
         fit_args = " ".join([response[0], *fit_tokens]) + suffix
