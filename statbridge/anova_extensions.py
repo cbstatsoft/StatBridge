@@ -82,6 +82,11 @@ class AnovaExtensions:
             elif method == "sidak":
                 p = float(-np.expm1(m * np.log1p(-raw)))
                 crit = float(stats.t.ppf((1 + (1 - alpha) ** (1 / m)) / 2, df_r))
+            elif method == "tukey":
+                # Tukey-Kramer for unequal group sizes.
+                q = abs(diff) / (se / np.sqrt(2))
+                p = float(stats.studentized_range.sf(q, k, df_r))
+                crit = float(stats.studentized_range.ppf(1 - alpha, k, df_r) / np.sqrt(2))
             else:  # Scheffe's simultaneous F-family envelope
                 f = t * t / (k - 1)
                 p = float(stats.f.sf(f, k - 1, df_r))
@@ -109,6 +114,43 @@ class AnovaExtensions:
             "under the requested Bonferroni, Sidak or Scheffe adjustment; "
             "these are not Welch, clustered, or repeated-measures comparisons.",
         )
+
+    def cmd_pwmean(self, args, opt):
+        """Bounded unweighted group means and adjusted pairwise differences."""
+        o = options(opt, ("over", "mcompare", "level"))
+        if "over" not in o:
+            raise StataError(
+                "Syntax: pwmean response, over(group) [mcompare(tukey|bonferroni|sidak|scheffe)]"
+            )
+        head, q = qualifiers(args)
+        vars_ = self.varlist(head, numeric=True)
+        factor = self.varlist(o["over"])
+        if len(vars_) != 1 or len(factor) != 1:
+            raise StataError("pwmean requires one numeric response and one grouping variable")
+        y, g = vars_[0], factor[0]
+        level = float(o.get("level", self.level))
+        if not 0 < level < 100:
+            raise StataError("level() must be between 0 and 100")
+        method = str(o.get("mcompare", "tukey")).lower()
+        if method not in ("tukey", "bonferroni", "sidak", "scheffe"):
+            raise StataError("mcompare() supports tukey, bonferroni, sidak, scheffe")
+        frame = self.df.loc[self.mask(q), [y, g]].dropna()
+        frame = frame.loc[frame[g].ne("")]
+        groups = [sub[y].to_numpy(dtype=float) for _, sub in frame.groupby(g, sort=True)]
+        k, n = len(groups), len(frame)
+        if k < 2 or n <= k or k > 100:
+            raise StataError("pwmean needs 2-100 groups and positive residual degrees of freedom")
+        if any(not np.isfinite(values).all() for values in groups):
+            raise StataError("pwmean requires finite numeric observations")
+        sse = float(sum(np.sum((values - values.mean()) ** 2) for values in groups))
+        if sse <= 0:
+            raise StataError("Pooled residual variance is zero")
+        mse = sse / (n - k)
+        self.r = {"N": n, "df_r": n - k, "mse": mse}
+        self.out("Group means\n" + frame.groupby(g)[y].agg(
+            ["count", "mean", "std"]
+        ).to_string(float_format=lambda v: f"{v:.6g}"))
+        self._oneway_posthoc(frame, y, g, mse=mse, df_r=n - k, method=method, level=level)
 
     def cmd_anova(self, args, opt):
         o = options(opt, ("partial", "sequential"))
