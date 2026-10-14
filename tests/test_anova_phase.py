@@ -130,7 +130,14 @@ def test_factorial_partial_main_effects_depend_on_reference_coding(factorial):
     assert (output["df"] == 1).all()
     assert (output["P>F"] >= 0).all()
     assert (output["P>F"] <= 1).all()
-    assert all("a#b" in term for term in ["a#b"])
+    y = e.df.y.to_numpy()
+    a, b = e.df.a.to_numpy(), e.df.b.to_numpy()
+    full = np.column_stack((np.ones(len(y)), a, b, a * b))
+    reduced = np.column_stack((np.ones(len(y)), b, a * b))
+    def rss(x):
+        residual = y - x @ np.linalg.lstsq(x, y, rcond=None)[0]
+        return residual @ residual
+    assert output.loc["a", "SS"] == pytest.approx(rss(reduced) - rss(full), rel=1e-9)
 
 
 @pytest.mark.parametrize("syntax", [
