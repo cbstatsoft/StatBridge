@@ -3,7 +3,7 @@ include CONTRIBUTING.md SECURITY.md RELEASE.json launch.py install.py requiremen
 include *.bat *.sh
 include .gitignore
 recursive-include benchmarks *.py
-recursive-include statbridge *.py *.csv
+recursive-include statbridge *.py *.csv *.svg
 recursive-include statbridge/legal *
 recursive-include docs *.md *.png *.json *.txt
 recursive-include examples *.do *.csv
