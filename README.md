@@ -1,5 +1,11 @@
 # StatBridge Qt 0.7.1
 
+[![Python 3.11–3.13](https://img.shields.io/badge/Python-3.11%E2%80%933.13-3776AB?logo=python&logoColor=white)](https://www.python.org/downloads/)
+[![GPL-3.0-or-later](https://img.shields.io/badge/licence-GPL--3.0--or--later-A42E2B?logo=gnu&logoColor=white)](LICENSE)
+![Windows](https://img.shields.io/badge/Windows-supported-0078D4?logo=windows11&logoColor=white)
+![Linux](https://img.shields.io/badge/Linux-supported-FCC624?logo=linux&logoColor=black)
+![macOS](https://img.shields.io/badge/macOS-supported-000000?logo=apple&logoColor=white)
+
 **Public beta** by **Connor Baird**, licensed under **GNU GPL v3 or later**.
 
 A Python/Qt6 statistical workspace with a documented subset of Stata syntax, a desktop interface and a curses terminal mode. It uses Polars and established Python statistical libraries, reads .dta/.do files, and reports implementation differences alongside results. Optional offline Learn exercises help students practise and interpret results.
@@ -210,6 +216,6 @@ Batch `--batch` and `--audit` paths are relative to the directory where you invo
 
 Use the host repository's issue tracker when available. Include a minimal synthetic do-file and diagnostics, and review logs/audits before sharing because they can contain commands and file paths. See [contributing](CONTRIBUTING.md) and [security/privacy](SECURITY.md).
 
---
+---
 
 **🄯 Connor Baird, 2026**
