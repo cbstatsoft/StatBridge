@@ -32,10 +32,12 @@ from .everyday import EverydayCommands
 from .extended_models import ExtendedModelCommands
 from .survey import SurveyCommands
 from .specialist_models import SpecialistModels
+from .cohort_did import CohortDID
 from .multiple_imputation import MultipleImputationCommands
 
 
 class Engine(
+    CohortDID,
     MultipleImputationCommands,
     SpecialistModels,
     ModelDiagnostics,
