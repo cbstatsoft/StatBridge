@@ -40,7 +40,7 @@ Implemented on the development branch pending CI validation: bounded conventiona
 
 ## Phase C: specialist estimators (partly implemented, specialist gaps remain)
 
-The development branch adds four explicitly bounded workflows and a one-stage finite-population correction for existing survey designs: Gaussian grouped mixed models (random intercept or correlated random slope), balanced repeated-measures ANOVA, predictive-mean-matching continuous chained imputation with Rubin-pooled OLS, and gapless VAR with stability/point forecasts. Independent tests and [specialist scope documentation](SPECIALIST_MODELS.md) accompany these additions. This does not finish the full Phase C requirements: complex surveys, generalized multiple imputation, cohort-specific staggered DiD, weak-IV robust inference, and specialist multivariate/SEM/time-series remain open. Do not treat the commands as release-validated until CI passes.
+The development branch adds four explicitly bounded workflows plus an unadjusted cohort-time DiD subset and a one-stage finite-population correction for existing survey designs: Gaussian grouped mixed models (random intercept or correlated random slope), balanced repeated-measures ANOVA, predictive-mean-matching continuous chained imputation with Rubin-pooled OLS, and gapless VAR with stability/point forecasts. Independent tests and [specialist scope documentation](SPECIALIST_MODELS.md) accompany these additions. This does not finish the full Phase C requirements: complex surveys, generalized multiple imputation, cohort-specific staggered DiD, weak-IV robust inference, and specialist multivariate/SEM/time-series remain open. Do not treat the commands as release-validated until CI passes.
 
 
 | Priority | Candidate | Correctness risk |
