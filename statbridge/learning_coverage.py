@@ -32,7 +32,7 @@ def coverage_lessons(Lesson):
             "Declare psu, weight and stratum, then estimate mean income for adults using subpop().",
             "Use svyset, then svy, subpop(adult): mean income.",
             "svyset psu [pw=weight], strata(stratum)\nsvy, subpop(adult): mean income",
-            "One-stage with-replacement Taylor variance only, PSU-minus-strata df. No FPC or singleton adjustments.",
+            "One-stage with-replacement Taylor variance and PSU-minus-strata df. Optional stratum-level FPC is available; no singleton adjustments.",
             reflection="Are probability weights enough to describe every survey design?",
             answer="No. Weights alone do not encode strata, clustering or stages. Coefficients may agree while standard errors differ.",
             category="Models and interpretation",
@@ -88,8 +88,9 @@ def check_coverage(engine, key):
             and "adult" in df
             and len(m.sample) == int(df.adult.sum())
             and m.df == 20
-            and engine.survey_design
-            == {"psu": "psu", "weight": "weight", "strata": "stratum"}
+            and engine.survey_design is not None
+            and all(engine.survey_design.get(name) == value for name, value in {"psu": "psu", "weight": "weight", "strata": "stratum"}.items())
+            and engine.survey_design.get("fpc") is None
         )
     if key == "survival":
         return (

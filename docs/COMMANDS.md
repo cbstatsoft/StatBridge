@@ -32,6 +32,23 @@ Backend: runtime metadata.
 
 Application and backend versions.
 
+## attgt
+
+```text
+xtset unit time
+attgt outcome, cohort(first_treatment_time) [level(95)]
+```
+
+Backend: pandas/SciPy. Balanced-panel unadjusted group-time DiD against never-treated controls; independent-unit Welch pointwise intervals and pretreatment placebo comparisons. Not the full Callaway-Sant'Anna estimator. [Specialist guide](SPECIALIST_MODELS.md).
+
+## anovarm
+
+```text
+anovarm response, subject(id) within(time [condition])
+```
+
+Backend: statsmodels AnovaRM. Balanced within-subject effects, no sphericity adjustments, between factors or missing cells. [Specialist guide](SPECIALIST_MODELS.md).
+
 ## anova
 
 ```text
@@ -782,6 +799,14 @@ Backend: pathlib.
 
 List files/folders with sizes and dates. Also accepts -a, -l, -h; dir is an alias. At most 1,000 entries shown.
 
+## mixed
+
+```text
+mixed outcome predictors, group(id) [slope(x) mle level(#)]
+```
+
+Backend: statsmodels MixedLM. Gaussian random intercept/correlated slope, ML/REML, model-based fixed-effect uncertainty. [Specialist guide](SPECIALIST_MODELS.md).
+
 ## margins
 
 ```text
@@ -1041,6 +1066,30 @@ pwd
 Backend: pathlib.
 
 Display session working directory.
+
+## var
+
+```text
+var x y [z], lags(1) [noconstant]
+```
+
+Backend: statsmodels VAR. Requires consecutive `tsset` series. [Specialist guide](SPECIALIST_MODELS.md).
+
+## varforecast
+
+```text
+varforecast [, steps(5)]
+```
+
+Point forecasts for stable fitted VAR, without intervals.
+
+## varstable
+
+```text
+varstable
+```
+
+Unit-circle characteristic-root stability check.
 
 ## qnorm
 
@@ -1335,12 +1384,12 @@ Taylor stratified-PSU covariance, PSU-minus-strata t df. Domains retain full des
 ## svyset
 
 ```text
-svyset [psu] [pw=weight] [, strata(group)] | svyset, clear
+svyset [psu] [pw=weight] [, strata(group) fpc(fraction_or_population_psus)] | svyset, clear
 ```
 
 Backend: NumPy/pandas.
 
-One-stage with-replacement design. No FPC, multistage, replicate weights or singleton adjustment.
+One-stage Taylor design with optional finite population correction constant within each stratum. No multistage, replicate weights or singleton adjustment. [Specialist guide](SPECIALIST_MODELS.md).
 
 ## swilk
 
@@ -1551,4 +1600,13 @@ xtsum [varlist] [if/in]
 Backend: pandas.
 
 Overall, between and within spread; between SD uses unweighted panel means.
+
+
+## mi
+
+```text
+mi regress outcome predictors, m(10) burnin(10) between(5) seed(42)
+```
+
+Backend: statsmodels MICEData / Rubin pooling. Continuous numeric chained-equation PMM and pooled OLS; StatBridge extension, not Stata `mi` syntax. [Specialist guide](SPECIALIST_MODELS.md).
 
