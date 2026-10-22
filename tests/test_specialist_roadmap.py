@@ -155,3 +155,18 @@ def test_mi_refuses_categorical_imputation_and_unsupported_syntax():
     assert not e.execute("mi regress y cat, m(5) burnin(3)")
     assert not e.execute("mi estimate: regress y x")
     assert e.model is None
+
+
+def test_synthetic_specialist_do_file_runs_end_to_end(tmp_path):
+    from pathlib import Path
+
+    script = (Path(__file__).resolve().parents[1] /
+              "examples" / "specialist_workflows.do").read_text(encoding="utf-8")
+    engine = Engine(cwd=tmp_path)
+    assert engine.run(script), [
+        event["text"] for event in engine.events if event["kind"] == "error"
+    ][-5:]
+    assert (tmp_path / "mi_results.csv").is_file()
+    assert engine.model is not None and engine.model.command == "svy: mean"
+    assert any(item["canonical"] == "attgt" and item["status"] == "ok"
+               for item in engine.ledger)
