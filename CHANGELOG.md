@@ -3,6 +3,8 @@
 - Phase B (in progress): add `estat influence [, top(#)]` for conventional unweighted OLS, with Cook’s distance, leverage and internally studentised residuals and explicit heuristic cutoffs.
 - Add independent mathematical tests for the influence output and refusal of robust or stale-model diagnostics.
 - Restore the prior fitted model, results and return objects when an ANOVA command fails after temporarily fitting a model.
+- Address Windows CI issues in SQLite atomic export (explicitly close database before rename), Unicode batch output, and locale-safe UTF-8 result assertions; preserve case-insensitive Windows path-completion semantics.
+- Update two-way clustered covariance reference tests for the absorbed-model residual degrees-of-freedom correction.
 
 - Replace the application SVG with a scalable, font-independent Σ logo, used for Linux shortcuts and the Qt window.
 - Extend `anova` from one-way to bounded two-factor classical fixed-effects ANOVA, with optional interactions and explicitly identified partial or sequential SS.
