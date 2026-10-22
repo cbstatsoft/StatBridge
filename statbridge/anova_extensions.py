@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import itertools
 import re
+from functools import wraps
 
 import numpy as np
 import pandas as pd
@@ -57,6 +58,27 @@ def _anova_terms(tokens):
     if any("#" in term and not set(term.split("#")).issubset(terms) for term in terms):
         raise StataError("Include both factor main effects before their interaction")
     return terms, factors
+
+
+def _preserve_estimation_on_error(function):
+    """A rejected ANOVA must not discard the preceding fitted model."""
+    @wraps(function)
+    def guarded(self, *args, **kwargs):
+        model = self.model
+        e = self.e.copy()
+        r = self.r.copy()
+        previous_table = getattr(self, "results_table", None)
+        previous_title = getattr(self, "results_table_title", None)
+        try:
+            return function(self, *args, **kwargs)
+        except Exception:
+            self.model = model
+            self.e = e
+            self.r = r
+            self.results_table = previous_table
+            self.results_table_title = previous_title
+            raise
+    return guarded
 
 
 class AnovaExtensions:
@@ -152,6 +174,7 @@ class AnovaExtensions:
         ).to_string(float_format=lambda v: f"{v:.6g}"))
         self._oneway_posthoc(frame, y, g, mse=mse, df_r=n - k, method=method, level=level)
 
+    @_preserve_estimation_on_error
     def cmd_anova(self, args, opt):
         o = options(opt, ("partial", "sequential"))
         if "partial" in o and "sequential" in o:
