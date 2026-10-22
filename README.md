@@ -95,7 +95,7 @@ This example assumes your dataset has the named variables. A new synthetic ANOVA
 
 | Area | Capabilities |
 | --- | --- |
-| **Statistical analysis** | OLS, logit/probit, selected GLMs and categorical models, FE/RE and guarded mixed models, IV/2SLS, factorial/repeated ANOVA and adjusted group comparisons, classical OLS diagnostics, limited continuous multiple imputation and VAR, descriptive tests and selected survey/survival workflows. |
+| **Statistical analysis** | OLS, logit/probit, selected GLMs and categorical models, FE/RE and guarded mixed models, IV/2SLS, factorial/repeated ANOVA and adjusted group comparisons, classical OLS diagnostics, limited continuous multiple imputation and VAR, descriptive tests and selected survey/survival workflows, including one-stage finite-population correction. |
 | **Data preparation** | Summaries, reshaping, merging, recoding, grouping, filtering, duplicate checks, and selected Polars-accelerated operations. |
 | **Data interchange** | Import/export of Stata, SPSS, R, Parquet, Arrow, Excel, CSV, and additional tabular formats, with format-specific limits. |
 | **Do-files** | Execute supported Stata-like commands, scripts, loops, macros, file navigation, and batch jobs. |
