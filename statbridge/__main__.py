@@ -57,6 +57,12 @@ def main():
         help="Disable saved terminal working folder",
     )
     args = parser.parse_args()
+    if sys.platform == "win32":
+        # Avoid legacy-code-page failures on Unicode command output.
+        # Batch reports are UTF-8 whether redirected or shown in a terminal.
+        for stream in (sys.stdout, sys.stderr):
+            if hasattr(stream, "reconfigure"):
+                stream.reconfigure(encoding="utf-8", errors="replace")
     if args.json and not args.doctor:
         parser.error("--json requires --doctor")
     if args.doctor or args.license:
