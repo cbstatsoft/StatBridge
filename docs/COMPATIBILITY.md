@@ -4,6 +4,12 @@ StatBridge translates commands into Python statistical calls. It is not a Stata 
 
 The command registry and option validators define the accepted subset. Unsupported commands, options, weight combinations, malformed valued options, and collinear designs fail explicitly. Some commands support only one syntax form. Having a familiar command name does not imply all of Stata's options are implemented.
 
+## Phase B OLS influence diagnostics
+
+`estat influence [, top(#)]` is restricted to **unweighted conventional OLS**. Cook's distance, the hat-matrix diagonal and internally studentised residuals come from statsmodels' OLS influence implementation. The display is sorted by Cook's distance; data indexes are shown rather than assuming uninterrupted Stata observation numbers. The nominal `2k/N` leverage and `4/N` Cook's-distance markers are exploratory screening heuristics, **not tests of significance**. Influence calculations never delete observations or refit the active model.
+
+The command refuses robust/clustered covariance, weighted regression, non-OLS fits, a changed estimation sample and undefined or nonfinite statistics. It does not imply diagnostic parity with Stata or support for complex-design influence functions.
+
 ## Numerical and statistical choices
 
 | Area | Implementation | Compatibility implication |
