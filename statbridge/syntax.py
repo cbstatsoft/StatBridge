@@ -182,6 +182,7 @@ def options(text, allowed=()):
             "scale",
             "ties",
             "strata",
+            "fpc",
             "subpop",
             "lag",
             "subject",
