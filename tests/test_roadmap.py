@@ -350,10 +350,15 @@ def test_multiway_covariance_matches_cluster_score_formula(tmp_path):
     def meat(labels):
         sums = score.groupby(labels).sum()
         g = len(sums)
-        return float((sums**2).sum()) * g / (g - 1) * (n - 1) / (n - 1)
+        return float((sums**2).sum()) * g / (g - 1)
 
     joint = pd.Series(list(zip(e.df.id, e.df.time)))
+    # AbsorbingLS was fitted with debiased=True. In addition to applying the
+    # group-count corrections to each inclusion-exclusion meat, its covariance
+    # uses the residual degrees of freedom after counting absorbed effects.
+    # Multiplying by (N-1)/df_r reproduces that documented finite-sample choice.
     variance = (meat(e.df.id) + meat(e.df.time) - meat(joint)) / float(x @ x) ** 2
+    variance *= (n - 1) / m.result.df_resid
     assert m.cov.loc["x", "x"] == pytest.approx(variance, rel=1e-8)
 
 
