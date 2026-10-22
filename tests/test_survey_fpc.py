@@ -31,7 +31,7 @@ def test_fpc_different_strata_and_invalid_population_count():
     for s, f in [(1, .3), (2, .6)]:
         x = scores[strata == s]
         centered = x - x.mean(axis=0)
-        manual += (1 - f) * len(x) / (len(x)-1) * float(centered.T @ centered)
+        manual += (1 - f) * len(x) / (len(x)-1) * (centered.T @ centered).item()
     assert v[0, 0] == pytest.approx(manual)
     assert (n, h) == (10, 2)
     with pytest.raises(Exception):
