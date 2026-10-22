@@ -51,6 +51,17 @@ A bounded statsmodels Gaussian VAR using the declared \`tsset\` time variable. I
 
 **Not implemented:** VECM, cointegration tests, structural VAR, impulse responses, FEVD, forecast intervals, robust covariance, exogenous regressors or advanced trend choices. A stable fitted VAR is not proof that the data generating process is stationary.
 
+## One-stage survey finite-population correction
+
+```stata
+svyset psu [pw=weight], strata(stratum) fpc(population_psus)
+svy: mean income
+```
+
+The existing one-stage stratified Taylor variance now optionally applies `(1-f_h)` to each stratum's PSU score covariance, where `f_h` is either a per-stratum sampling fraction in (0,1] or the number of population PSUs `N_h >= n_h`. The `fpc()` variable must be finite, positive and constant within each stratum; invalid counts or fractions are refused. It does not modify point estimates or survey degrees of freedom.
+
+This is **not** a multistage survey implementation. There is no PPS without-replacement variance, stratum sampling frame calibration, replicate weights, or census/PSU singleton adjustment.
+
 ## Validation and roadmap boundaries
 
 Synthetic tests independently compare random-intercept mixed-model estimates and covariance to direct statsmodels usage, repeated ANOVA tables, VAR coefficients/forecasts, and Rubin pooled total variance. They also cover failure guards, MI reproducibility, read-only dataset behaviour and VAR stale fits. These tests must pass in GitHub Actions on supported Python/platform combinations before this work should be described as validated.
