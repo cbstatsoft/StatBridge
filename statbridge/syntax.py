@@ -184,6 +184,13 @@ def options(text, allowed=()):
             "strata",
             "subpop",
             "lag",
+            "subject",
+            "within",
+            "slope",
+            "steps",
+            "burnin",
+            "between",
+            "m",
         }
         if k in valued and (
             (v is None and k != "firstrow") or (v is not None and not v.strip())
