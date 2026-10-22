@@ -1,5 +1,6 @@
 # Unreleased: next statistical roadmap phase
 
+- Extend existing one-stage stratified survey inference with validated per-stratum finite-population correction using sampling fractions or PSU population counts.
 - Phase C development: bounded Gaussian mixed models with random intercept/slope; balanced within-subject repeated-measures ANOVA; continuous PMM/MICE with Rubin-pooled OLS; gapless-series VAR and point forecasts/stability checks.
 - Add guardrails for convergence, missingness, cluster sizes, collinearity, incomplete repeated cells, unsupported inference and stale VAR fits; preserve the dataset for estimators that do not impute in-place.
 - Add backend/reference numerical test fixtures and a specialist-statistics compatibility guide. This phase is **not** the full specialist roadmap or certified Stata parity; extended MI/survey/DID/weak-IV/SEM workflows remain outstanding.
