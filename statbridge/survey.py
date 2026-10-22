@@ -14,11 +14,13 @@ from .models import Model
 from .everyday import level_option
 
 
-def survey_covariance(scores, psu, strata):
+def survey_covariance(scores, psu, strata, fpc=None):
     data = pd.DataFrame(scores).copy()
     data["_psu"] = np.asarray(psu)
     data["_stratum"] = np.asarray(strata)
-    grouped = data.groupby(["_stratum", "_psu"], sort=False, dropna=False).sum()
+    if fpc is not None:
+        data["_fpc"] = np.asarray(fpc, dtype=float)
+    grouped = data.drop(columns=["_fpc"], errors="ignore").groupby(["_stratum", "_psu"], sort=False, dropna=False).sum()
     cov = np.zeros((scores.shape[1], scores.shape[1]))
     npsu = nstrata = 0
     for _, group in grouped.groupby(level=0, sort=False):
@@ -29,7 +31,18 @@ def survey_covariance(scores, psu, strata):
             )
         z = group.to_numpy()
         z = z - z.mean(axis=0)
-        cov += n / (n - 1) * (z.T @ z)
+        fraction = 0.0
+        if fpc is not None:
+            in_stratum = data.loc[data["_stratum"].eq(group.index.get_level_values(0)[0]), "_fpc"]
+            if not np.isfinite(in_stratum).all() or in_stratum.nunique() != 1:
+                raise StataError("fpc() must be finite and constant within each stratum")
+            value = float(in_stratum.iloc[0])
+            if value <= 0:
+                raise StataError("fpc() must be a positive population count or sampling fraction")
+            fraction = value if value <= 1 else n / value
+            if fraction > 1 or (value > 1 and value < n):
+                raise StataError("fpc population PSU count must be >= sampled PSUs")
+        cov += (1 - fraction) * n / (n - 1) * (z.T @ z)
         npsu += n
         nstrata += 1
     return cov, npsu, nstrata
@@ -37,7 +50,7 @@ def survey_covariance(scores, psu, strata):
 
 class SurveyCommands:
     def cmd_svyset(self, args, opt):
-        o = options(opt, ("strata", "clear"))
+        o = options(opt, ("strata", "fpc", "clear"))
         if "clear" in o:
             if args or len(o) > 1:
                 raise StataError("Use svyset, clear alone")
@@ -53,17 +66,19 @@ class SurveyCommands:
         psus = self.varlist(text) if text else []
         weights = self.varlist(spec[1], numeric=True) if spec else []
         strata = self.varlist(o["strata"]) if "strata" in o else []
-        if len(psus) > 1 or len(weights) > 1 or len(strata) > 1:
+        fpc = self.varlist(o["fpc"], numeric=True) if "fpc" in o else []
+        if len(psus) > 1 or len(weights) > 1 or len(strata) > 1 or len(fpc) > 1:
             raise StataError("One variable per design role supported")
         self.survey_design = {
             "psu": psus[0] if psus else None,
             "weight": weights[0] if weights else None,
             "strata": strata[0] if strata else None,
+            "fpc": fpc[0] if fpc else None,
         }
         self.out(str(self.survey_design))
         self.notice(
             "SVY_DESIGN",
-            "One-stage with-replacement Taylor variance only; no FPC, multistage, replicate weights, calibration or singleton adjustment. Omitted PSU treats observations as sampling units.",
+            "One-stage stratified Taylor variance, optionally with a finite population correction fpc() constant per stratum (sampling fraction or stratum population PSU count). No multistage, replicate weights, calibration or singleton adjustment. Omitted PSU treats observations as sampling units.",
         )
 
     def survey_command(self, text):
@@ -191,7 +206,8 @@ class SurveyCommands:
                 scores.append(v.to_numpy())
             params = pd.Series(estimates)
             u = np.column_stack(scores)
-        cov, npsu, nstrata = survey_covariance(u, psu, strata)
+        fpc = data[design["fpc"]] if design.get("fpc") else None
+        cov, npsu, nstrata = survey_covariance(u, psu, strata, fpc)
         cov = pd.DataFrame(cov, index=params.index, columns=params.index)
         # Ordinary WLS likelihood and information criteria are not survey statistics.
         self.model = Model(
@@ -218,5 +234,5 @@ class SurveyCommands:
         self.report_model()
         self.notice(
             "SVY_LINEARIZED",
-            "Stratified PSU-total Taylor covariance, design df=PSUs minus strata, symmetric t intervals. All design PSUs retained with zero scores outside subpopulations. Incomplete outcome rows excluded from estimates with zero scores. No design effects, FPC or transformed proportion intervals.",
+            "Stratified PSU-total Taylor covariance, optional stratum-level one-stage FPC, design df=PSUs minus strata, symmetric t intervals. All design PSUs retained with zero scores outside subpopulations. No multistage design effects, replicate weights or transformed proportion intervals.",
         )
