@@ -80,7 +80,7 @@ def test_text_logs_are_aligned_and_quiet_regression_stays_quiet(fitted, tmp_path
     e = fitted
     assert e.run('log using "report.log", replace\nregress y x, robust\nlog close')
     output = report(e)
-    logged = (tmp_path / "report.log").read_text()
+    logged = (tmp_path / "report.log").read_text(encoding="utf-8")
     assert output["text"] in logged
     assert "<table" not in logged
     assert "<0.001" in logged

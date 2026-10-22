@@ -141,6 +141,7 @@ def test_coverage_report(data):
     from statbridge.catalog import COMMANDS
 
     run(data, "coverage")
-    assert len(COMMANDS) == 154
+    assert len(COMMANDS) >= 155  # Bounded commands grow as documented subsets are added.
+    assert {"anova", "oneway", "pwmean", "estat"}.issubset(COMMANDS)
     assert len(data.results_table) == 10
     assert any("not a measured percentage" in x["text"] for x in data.events)

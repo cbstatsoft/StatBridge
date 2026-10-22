@@ -162,7 +162,10 @@ def test_path_completion_directories_file_types_and_suffix(session):
 def test_completion_refreshes_after_cd(session):
     c = Suggestions()
     c.sync(session)
-    assert c.candidates("do test") == []
+    # Windows file names are matched case-insensitively. "Test Pack"
+    # therefore completes lowercase "test" on that platform.
+    expected = ['do "Test Pack/"'] if os.name == "nt" else []
+    assert c.candidates("do test") == expected
     assert session.execute('cd "Test Pack"')
     c.sync(session)
     assert c.candidates("do test") == ['do "test_analysis.do"']

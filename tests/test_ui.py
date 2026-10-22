@@ -343,8 +343,8 @@ def test_rich_results_theme_switch_export_and_persistence(app, tmp_path, monkeyp
         QFileDialog, "getSaveFileName", lambda *a, **kw: (str(path), "")
     )
     w.save_results()
-    assert path.read_text() == plain + ". summarize x\n"
-    assert "<table" not in path.read_text()
+    assert path.read_text(encoding="utf-8") == plain + ". summarize x\n"
+    assert "<table" not in path.read_text(encoding="utf-8")
     w.engine.dirty = False
     w.close()
     other = MainWindow()
