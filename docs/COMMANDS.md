@@ -32,6 +32,15 @@ Backend: runtime metadata.
 
 Application and backend versions.
 
+## attgt
+
+```text
+xtset unit time
+attgt outcome, cohort(first_treatment_time) [level(95)]
+```
+
+Backend: pandas/SciPy. Balanced-panel unadjusted group-time DiD against never-treated controls; independent-unit Welch pointwise intervals and pretreatment placebo comparisons. Not the full Callaway-Sant'Anna estimator. [Specialist guide](SPECIALIST_MODELS.md).
+
 ## anovarm
 
 ```text
@@ -1375,12 +1384,12 @@ Taylor stratified-PSU covariance, PSU-minus-strata t df. Domains retain full des
 ## svyset
 
 ```text
-svyset [psu] [pw=weight] [, strata(group)] | svyset, clear
+svyset [psu] [pw=weight] [, strata(group) fpc(fraction_or_population_psus)] | svyset, clear
 ```
 
 Backend: NumPy/pandas.
 
-One-stage with-replacement design. No FPC, multistage, replicate weights or singleton adjustment.
+One-stage Taylor design with optional finite population correction constant within each stratum. No multistage, replicate weights or singleton adjustment. [Specialist guide](SPECIALIST_MODELS.md).
 
 ## swilk
 
