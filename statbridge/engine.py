@@ -18,6 +18,7 @@ from .data import DataCommands
 from .common_data import CommonDataCommands
 from .models import ModelCommands
 from .common_models import CommonModelCommands
+from .model_diagnostics import ModelDiagnostics
 from .anova_extensions import AnovaExtensions
 from .filesystem import FileCommands
 from .result_tables import ResultTables
@@ -33,6 +34,7 @@ from .survey import SurveyCommands
 
 
 class Engine(
+    ModelDiagnostics,
     AnovaExtensions,
     EverydayCommands,
     ExtendedModelCommands,
