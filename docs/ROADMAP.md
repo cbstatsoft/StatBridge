@@ -27,7 +27,9 @@ The current unreleased branch contains:
 
 **Validation gate:** Run the full Linux test suite and the new `tests/test_anova_phase.py`; check wheel/sdist packaging, headless desktop launch and the refreshed launcher icon. Compare factorial SS (including unbalanced, reference-coded interaction models) against independent known-design calculations and state precisely where Stata differs. Do not publish this as a validated release until the gate passes.
 
-## Phase B: estimation diagnostics and model consistency (planned)
+## Phase B: estimation diagnostics and model consistency (in progress)
+
+Implemented on the development branch pending CI validation: bounded conventional-OLS `estat influence` reporting, independent projection-matrix/Cook’s distance fixtures, rejection of unsupported/stale covariance conditions, and rollback of fitted model state after a rejected ANOVA. These additions do not establish numerical parity with Stata.
 
 1. Build independent fixtures for new categorical models, inference choices, and regression/prediction interactions.
 2. Add robust reference tests for finite-sample covariance, factor contrasts, invalid or nonestimable design restrictions, and stored-model/reporting consistency.
