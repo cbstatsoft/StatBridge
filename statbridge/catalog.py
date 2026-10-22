@@ -566,9 +566,9 @@ COMMANDS["predict"] = (
     "Unweighted OLS supports out-of-sample xb/residuals/stdp, conventional stdf and in-sample influence diagnostics. Other estimators retain sample-only xb/residuals/pr where supported. Unknown factor levels fail.",
 )
 COMMANDS["estat"] = (
-    "estat vif | hettest | ic | ovtest",
+    "estat vif | hettest | ic | ovtest | influence [, top(#)]",
     "statsmodels",
-    "OLS VIF/Breusch-Pagan and conventional-OLS Ramsey RESET; AIC/BIC where available.",
+    "OLS VIF/Breusch-Pagan, RESET and top-N Cook/leverage diagnostics for conventional unweighted OLS; AIC/BIC where available.",
 )
 
 COMMANDS.update({
@@ -578,7 +578,7 @@ COMMANDS.update({
     'esttab': ('esttab [names] [using "file.csv|html|tex"] [, se level(#) replace]', 'pandas / scipy', 'Bounded community esttab-style wrapper. Full estout syntax is not implemented.'),
     'dtable': ('dtable numeric_varlist [if ...] [in ...] [, by(group) export("file.csv|html|tex", replace)]', 'pandas', 'Unweighted available-case N, mean, SD, minimum and maximum, optionally by group.'),
     'xtreg': ('xtreg y x [if ...] [, fe|re|cre vce(robust|cluster var) level(#)]', 'linearmodels', 'FE/RE or balanced complete-case correlated RE with identified panel means. CRE supports only an intercept model; no weights.'),
-    'estat': ('estat vif|hettest|ic|ovtest|mundlak|firststage|endogenous|overid', 'statsmodels / linearmodels', 'OLS diagnostics, balanced-panel Mundlak, and IV first-stage/exogeneity/overidentification subsets. Clustered IV overidentification is explicitly refused.'),
+    'estat': ('estat vif|hettest|ic|ovtest|influence [, top(#)]|mundlak|firststage|endogenous|overid', 'statsmodels / linearmodels', 'OLS diagnostics, balanced-panel Mundlak, and IV first-stage/exogeneity/overidentification subsets. Clustered IV overidentification is explicitly refused.'),
     'reghdfe': ('reghdfe y x [if ...] [, absorb(categorical_vars) vce(robust|cluster var1 [var2]) level(#) keepsingletons]', 'linearmodels AbsorbingLS', 'Categorical absorption with iterative singleton removal and one/two-way clustering. Backend df/covariance corrections differ from community reghdfe; no weights or heterogeneous slopes.'),
     'didregress': ('didregress (y [controls]) (treated), group(groupvar) time(timevar) [vce(cluster groupvar) level(#)]', 'AbsorbingLS', 'Two-period repeated-cross-section additive DiD only; treatment starts in period 2; at least two treated and two control groups. Complete data, clustering by group. No staggered adoption.'),
     'xtdidregress': ('xtdidregress (y [controls]) (treated), group(groupvar) time(timevar) [level(#)]', 'AbsorbingLS', 'Balanced two-period panel DiD after xtset id time. Stable group membership, common conditional effect and parallel-trends assumptions. No staggered adoption/event-study estimator.'),
