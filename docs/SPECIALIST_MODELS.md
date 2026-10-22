@@ -51,6 +51,19 @@ A bounded statsmodels Gaussian VAR using the declared \`tsset\` time variable. I
 
 **Not implemented:** VECM, cointegration tests, structural VAR, impulse responses, FEVD, forecast intervals, robust covariance, exogenous regressors or advanced trend choices. A stable fitted VAR is not proof that the data generating process is stationary.
 
+## Staggered cohort-period difference-in-differences (bounded)
+
+```stata
+xtset id year
+attgt outcome, cohort(first_treat_year) level(95)
+```
+
+The `attgt` command is a **StatBridge extension**, not Stata's `csdid` or the full Callaway–Sant'Anna `att_gt` estimator. The cohort variable is constant within unit, contains 0 for never-treated units, and is the first period when treatment begins. Treated cohorts must start after the first observed time, and the sample must be a **complete balanced unit-time panel** with 4–40 equally spaced periods, at least two treated cohorts and at least five units in every cohort and the never-treated control group.
+
+For each treated cohort g and post-treatment period t, it compares the unit-level outcome change from g's **last pretreatment period** to t with the corresponding change in never-treated units. It also prints earlier change-score placebo comparisons (relative to that same baseline) as pre-trend diagnostics. Reported confidence limits use Welch's independent-unit SE and per-cell t degrees of freedom. They are **pointwise**, not simultaneous. There is no invalid two-way-FE reuse of already-treated cohorts as controls.
+
+These estimates require parallel trends for each cohort against never-treated controls, correct absorbing treatment timing, no anticipation and no interference. The implementation has **no** regression adjustment, doubly robust estimation, not-yet-treated comparison group, cluster correlation across units, unit weight calibration, simultaneous bands, bootstrap joint inference or aggregated ATT variance. Pre-trend placebos do not establish causal identification.
+
 ## One-stage survey finite-population correction
 
 ```stata
