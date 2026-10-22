@@ -31,9 +31,13 @@ from .format_io import FormatIOCommands
 from .everyday import EverydayCommands
 from .extended_models import ExtendedModelCommands
 from .survey import SurveyCommands
+from .specialist_models import SpecialistModels
+from .multiple_imputation import MultipleImputationCommands
 
 
 class Engine(
+    MultipleImputationCommands,
+    SpecialistModels,
     ModelDiagnostics,
     AnovaExtensions,
     EverydayCommands,
