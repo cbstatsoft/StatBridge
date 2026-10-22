@@ -25,7 +25,7 @@ def test_cohort_att_matches_independent_last_pre_period_differences():
     e = Engine()
     e.df = frame.copy()
     assert e.execute("xtset id time")
-    assert e.execute("attgt y, cohort(cohort) level(95)")
+    assert e.execute("attgt y, cohort(cohort) level(95)"), [v["text"] for v in e.events if v["kind"] == "error"]
     table = e.results_table
     assert e.model is None
     assert set(table["Cohort"]) == {4., 5.}
