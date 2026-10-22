@@ -1,5 +1,9 @@
 # Unreleased: next statistical roadmap phase
 
+- Phase B (in progress): add `estat influence [, top(#)]` for conventional unweighted OLS, with Cook’s distance, leverage and internally studentised residuals and explicit heuristic cutoffs.
+- Add independent mathematical tests for the influence output and refusal of robust or stale-model diagnostics.
+- Restore the prior fitted model, results and return objects when an ANOVA command fails after temporarily fitting a model.
+
 - Replace the application SVG with a scalable, font-independent Σ logo, used for Linux shortcuts and the Qt window.
 - Extend `anova` from one-way to bounded two-factor classical fixed-effects ANOVA, with optional interactions and explicitly identified partial or sequential SS.
 - Extend `oneway` with Bonferroni, Šidák and Scheffé pooled-variance pairwise contrasts, adjusted p-values and simultaneous intervals.
