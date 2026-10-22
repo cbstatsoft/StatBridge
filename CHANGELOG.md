@@ -1,5 +1,6 @@
 # Unreleased: next statistical roadmap phase
 
+- Add bounded group-time staggered DiD against never-treated units, with independent unit-level change-score inference and pre-period placebo contrasts; do not conflate it with full Callaway-Sant'Anna estimators.
 - Extend existing one-stage stratified survey inference with validated per-stratum finite-population correction using sampling fractions or PSU population counts.
 - Phase C development: bounded Gaussian mixed models with random intercept/slope; balanced within-subject repeated-measures ANOVA; continuous PMM/MICE with Rubin-pooled OLS; gapless-series VAR and point forecasts/stability checks.
 - Add guardrails for convergence, missingness, cluster sizes, collinearity, incomplete repeated cells, unsupported inference and stale VAR fits; preserve the dataset for estimators that do not impute in-place.
