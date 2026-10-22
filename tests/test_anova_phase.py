@@ -158,6 +158,27 @@ def test_large_factorial_preflight_rejects_before_fitting():
     assert e.model is None
 
 
+def test_failed_anova_restores_preceding_estimation():
+    e = Engine()
+    rng = np.random.default_rng(12)
+    g = np.repeat([0, 1], 24)
+    e.df = pd.DataFrame({
+        "y": g.astype(float),
+        "g": g,
+        "x": rng.normal(size=len(g)),
+    })
+    assert e.execute("regress y x")
+    original_model = e.model
+    original_e = dict(e.e)
+    previous_table = e.results_table.copy(deep=True)
+    # Full-rank indicator regression fits each group exactly. Its zero
+    # residual variance is invalid for the classical ANOVA F-test.
+    assert not e.execute("anova y g")
+    assert e.model is original_model
+    assert e.e == original_e
+    pd.testing.assert_frame_equal(e.results_table, previous_table)
+
+
 def test_sigma_is_a_path_based_svg():
     from pathlib import Path
     svg = (Path(__file__).resolve().parents[1] /
