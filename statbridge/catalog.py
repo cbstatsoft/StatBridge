@@ -606,6 +606,11 @@ COMMANDS['predict']=(COMMANDS['predict'][0]+' | predict new, pr outcome(category
 COMMANDS["license"] = ("license", "StatBridge", "Display offline GNU GPL v3 or later, copyright and third-party notices. StatBridge extension.")
 
 # Specialist estimator subsets. These names do not claim full Stata syntax parity.
+COMMANDS["svyset"] = (
+    "svyset psu [pw=weight] [, strata(stratum) fpc(fraction_or_population_psus)]",
+    "pandas / NumPy",
+    "One-stage PSU design, optional probability weight, stratification and per-stratum finite population correction. No multistage designs.",
+)
 COMMANDS.update({
     "mixed": (
         "mixed outcome predictors, group(id) [slope(x) mle level(#)]",
