@@ -54,7 +54,7 @@ svy, subpop(adult): regress income education age
 
 One-stage, with-replacement Taylor linearization. Scores are summed by PSU within stratum, centered and scaled by n_h/(n_h-1). Inference uses PSUs minus strata degrees of freedom. All design PSUs are retained for subpopulations, with zero scores outside the domain. Incomplete outcome rows are excluded from point estimates and assigned zero scores. PSU identifiers repeated across strata are distinct sampling units.
 
-Identifiers must be nonmissing, weights finite and positive, and every stratum must have at least two PSUs. No FPC, multistage/replicate designs, singleton adjustment, calibration, design effects, survey logit or other nonlinear survey estimators. `if/in` is refused; use a nonmissing 0/1 `subpop()` indicator. Only `level()` is accepted by the underlying survey estimator. Proportion intervals are symmetric t intervals, not transformed intervals. Ordinary WLS likelihood/IC are not reported as survey fit statistics.
+Identifiers must be nonmissing, weights finite and positive, and every stratum must have at least two PSUs. Finite-population correction is supported for a one-stage design via `fpc()` (stratum-constant sampling fraction or PSU population count). No multistage/replicate designs, singleton adjustment, calibration, design effects, survey logit or other nonlinear survey estimators. `if/in` is refused; use a nonmissing 0/1 `subpop()` indicator. Only `level()` is accepted by the underlying survey estimator. Proportion intervals are symmetric t intervals, not transformed intervals. Ordinary WLS likelihood/IC are not reported as survey fit statistics.
 
 ### Survival
 
