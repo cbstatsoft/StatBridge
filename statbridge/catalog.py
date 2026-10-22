@@ -604,3 +604,37 @@ COMMANDS['graph']=('graph box varlist [, over(group) title(text)] | graph bar [(
 COMMANDS['predict']=(COMMANDS['predict'][0]+' | predict new, pr outcome(category) | predict new, hr',COMMANDS['predict'][1],COMMANDS['predict'][2]+' Categorical probabilities, Cox xb/hr and Newey/survey-linear xb/residuals use estimation sample only.')
 
 COMMANDS["license"] = ("license", "StatBridge", "Display offline GNU GPL v3 or later, copyright and third-party notices. StatBridge extension.")
+
+# Specialist estimator subsets. These names do not claim full Stata syntax parity.
+COMMANDS.update({
+    "mixed": (
+        "mixed outcome predictors, group(id) [slope(x) mle level(#)]",
+        "statsmodels MixedLM",
+        "Gaussian ML/REML random-intercept or correlated intercept/slope by group. Model-based fixed effects with normal intervals; no nested/crossed effects, weights or general predictions.",
+    ),
+    "anovarm": (
+        "anovarm response, subject(id) within(time [condition])",
+        "statsmodels AnovaRM",
+        "StatBridge extension: balanced one/two-way within-subject repeated-measures ANOVA. Sphericity assumed; no between factors, missing cells or corrected df.",
+    ),
+    "mi": (
+        "mi regress y x ..., m(10) burnin(10) between(5) seed(42)",
+        "statsmodels MICEData / NumPy / SciPy",
+        "StatBridge extension: bounded continuous-only predictive-mean-matching chained imputations and Rubin-pooled OLS with old large-sample df; no Stata mi syntax, passive/categorical imputation or MAR diagnostics.",
+    ),
+    "var": (
+        "var x y [z], lags(1) [noconstant]",
+        "statsmodels VAR",
+        "2-6 variable Gaussian VAR(1..12) after gapless tsset. OLS and AIC/BIC; no cointegration, exogenous regressors or automatic lag selection.",
+    ),
+    "varstable": (
+        "varstable",
+        "statsmodels VAR",
+        "Show the fitted VAR inverse characteristic roots and unit-circle stability status.",
+    ),
+    "varforecast": (
+        "varforecast [, steps(5)]",
+        "statsmodels VAR",
+        "Up to 60 conditional point forecasts from a stable fitted VAR. No intervals or structural identification.",
+    ),
+})
