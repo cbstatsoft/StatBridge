@@ -826,6 +826,7 @@ class FormatIOCommands:
             )
         elif kind == "sqlite":
             import sqlite3
+            from contextlib import closing
 
             name = o.get("table", "dataset")
             if not name or name.lower().startswith("sqlite_"):
@@ -834,8 +835,11 @@ class FormatIOCommands:
                 )
 
             def writer(tmp):
-                with sqlite3.connect(tmp) as connection:
-                    frame.to_sql(name, connection, index=False, if_exists="fail")
+                # sqlite3.Connection.__exit__ does not close the file handle.
+                # Windows cannot rename an open SQLite database.
+                with closing(sqlite3.connect(tmp)) as connection:
+                    with connection:
+                        frame.to_sql(name, connection, index=False, if_exists="fail")
 
             self.notice(
                 "IO_SQLITE",
