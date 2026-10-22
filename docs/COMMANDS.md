@@ -385,12 +385,12 @@ Show e() results.
 ## estat
 
 ```text
-estat vif|hettest|ic|ovtest|mundlak|firststage|endogenous|overid
+estat vif|hettest|ic|ovtest|influence [, top(#)]|mundlak|firststage|endogenous|overid
 ```
 
 Backend: statsmodels / linearmodels.
 
-OLS diagnostics, balanced-panel Mundlak, and IV first-stage/exogeneity/overidentification subsets. Clustered IV overidentification is explicitly refused.
+OLS diagnostics, balanced-panel Mundlak, and IV first-stage/exogeneity/overidentification subsets. `estat influence [, top(10)]` reports conventional unweighted OLS Cook’s distance, leverage and internally studentised residuals, sorted by Cook’s distance. The `2k/N` and `4/N` flags are heuristics, not significance tests. Clustered IV overidentification is explicitly refused.
 
 ## estimates
 
