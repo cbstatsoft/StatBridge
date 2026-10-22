@@ -612,6 +612,11 @@ COMMANDS["svyset"] = (
     "One-stage PSU design, optional probability weight, stratification and per-stratum finite population correction. No multistage designs.",
 )
 COMMANDS.update({
+    "attgt": (
+        "attgt outcome, cohort(first_treatment_period) [level(#)]",
+        "pandas / SciPy",
+        "StatBridge extension: balanced cohort-period change-score DiD against never-treated controls with pointwise Welch intervals and pre-placebos; not full Callaway-Sant'Anna or staggered event-study inference.",
+    ),
     "mixed": (
         "mixed outcome predictors, group(id) [slope(x) mle level(#)]",
         "statsmodels MixedLM",
