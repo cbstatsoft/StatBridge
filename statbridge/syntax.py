@@ -186,6 +186,7 @@ def options(text, allowed=()):
             "subpop",
             "lag",
             "subject",
+            "cohort",
             "within",
             "slope",
             "steps",
