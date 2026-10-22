@@ -9,6 +9,7 @@ continuous, numeric OLS models; it is not Stata's general mi framework.
 from __future__ import annotations
 
 from threading import Lock
+from inspect import signature
 
 import numpy as np
 import pandas as pd
@@ -101,7 +102,13 @@ class MultipleImputationCommands:
                 saved_random_state = np.random.get_state()
                 try:
                     np.random.seed(seed)
-                    mice = MICEData(data.reset_index(drop=True))
+                    # statsmodels 0.15+ switched to an explicit SPEC-007 RNG;
+                    # 0.14.x uses NumPy's module-level RandomState.
+                    mice_kw = (
+                        {"rng": np.random.default_rng(seed)}
+                        if "rng" in signature(MICEData).parameters else {}
+                    )
+                    mice = MICEData(data.reset_index(drop=True), **mice_kw)
                     for _ in range(burnin):
                         mice.update_all(1)
                     for _ in range(m):
