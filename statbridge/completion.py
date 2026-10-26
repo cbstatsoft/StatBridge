@@ -220,6 +220,7 @@ def structure(text):
 class Suggestions:
     def __init__(self):
         self.cwd = None
+        self.syntax_mode = "stata"
         self.history = []
         self.variables = []
         self.variable_types = {}  # numeric/string; missing metadata is permissive
@@ -235,6 +236,7 @@ class Suggestions:
     def sync(self, engine):
         """Refresh metadata after loading, editing, renaming or fitting data."""
         self.cwd = engine.cwd
+        self.syntax_mode = getattr(engine, "syntax_mode", "stata")
         self.variables = list(engine.df.columns)
         numeric = set(engine.df.select_dtypes(include=["number", "bool"]).columns)
         self.variable_types = {
@@ -288,9 +290,43 @@ class Suggestions:
             out.append(Completion(value + suffix, len(value)))
         return out
 
+    def _logos_candidates(self, text):
+        """Complete only documented Logos statements; never invent free text."""
+        phrases = [
+            "show variables", "describe dataset", "summarise ",
+            "summary of ", "average of ", "count rows",
+            "count rows where ", "keep rows where ", "drop rows where ",
+            "list rows with ", "regress ", "fit linear model ",
+            "fit logistic model ", "fit probit model ",
+            "create ", "let ", "tabulate ", "correlate ",
+            "histogram of ", "every row satisfies ", "there exists a row where ",
+            "∀ rows: ", "∃ row: ", "predict fitted values as ",
+            "predict residuals as ", "explain ", "syntax stata",
+            "stata: ", "logos: ",
+        ]
+        prefix = text.lstrip()
+        roots = [x for x in phrases if x.lower().startswith(prefix.lower()) and x != prefix]
+        if roots:
+            return [text[:len(text)-len(prefix)] + x for x in roots]
+        match = re.match(
+            r"^(regress\s+|regress\s+\w+\s+on\s+|summari[sz]e\s+|"
+            r"summary\s+of\s+|average\s+of\s+|"
+            r"tabulate\s+|correlate\s+)([A-Za-z_]\w*)$",
+            prefix, flags=re.I
+        )
+        if match:
+            return [
+                text[:len(text) - len(match[2])] + var
+                for var in self.variables
+                if var.lower().startswith(match[2].lower()) and var != match[2]
+            ]
+        return []
+
     def _candidates(self, text, include_history=True):
         if text.lstrip().startswith("*"):
             return []
+        if self.syntax_mode == "logos" and not text.lstrip().startswith("stata:"):
+            return self._logos_candidates(text)
         survey = re.match(r"^(\s*svy(?:\s*,[^:]*)?\s*:\s*)(.*)$", text)
         if survey:
             prefix, tail = survey.groups()

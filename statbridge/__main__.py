@@ -49,6 +49,10 @@ def main():
         "--cwd", metavar="DIRECTORY", help="Initial session working directory"
     )
     parser.add_argument(
+        "--syntax", choices=("stata", "logos"), default=None,
+        help="Initial command language for batch, terminal or desktop session"
+    )
+    parser.add_argument(
         "--no-history", action="store_true", help="Disable saved terminal history"
     )
     parser.add_argument(
@@ -66,7 +70,7 @@ def main():
     if args.json and not args.doctor:
         parser.error("--json requires --doctor")
     if args.doctor or args.license:
-        if args.cwd or args.audit or args.no_history or args.no_remember_cwd:
+        if args.cwd or args.audit or args.no_history or args.no_remember_cwd or args.syntax:
             parser.error(
                 "Session options cannot be combined with --doctor or --license"
             )
@@ -94,6 +98,7 @@ def main():
             audit=args.audit,
             no_history=args.no_history,
             no_cwd=args.no_remember_cwd,
+            syntax=args.syntax or "stata",
         )
     if args.batch:
         # CLI paths are relative to invocation directory; --cwd affects commands.
@@ -117,7 +122,7 @@ def main():
             ):
                 print(event["text"], flush=True)
 
-        engine = Engine(emit=emit, cwd=args.cwd)
+        engine = Engine(emit=emit, cwd=args.cwd, syntax_mode=args.syntax or "stata")
         try:
             success = engine.run(source)
         except (OSError, UnicodeError) as e:
@@ -147,7 +152,7 @@ def main():
         parser.error("--audit and --cwd require --batch or --terminal")
     from .ui import main as gui
 
-    return gui()
+    return gui(syntax=args.syntax)
 
 
 if __name__ == "__main__":

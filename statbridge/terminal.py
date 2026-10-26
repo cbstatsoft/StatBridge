@@ -29,6 +29,9 @@ Ctrl+C: request stop while running, or clear the command when idle
 F10 or :quit: close terminal (asks before discarding unsaved data)
 
 Use Stata commands, including do "analysis.do", cd, ls, use and save.
+Enter syntax logos to use bounded English/formal logic; syntax stata switches back.
+Use 'logos: ...' for one Logos command or 'stata: ...' inside Logos mode.
+For the grammar, enter help logos after switching (or stata: help logos).
 Use graph export "plot.png", replace to save a plot; graphics are not drawn here.
 Use log using "session.log", text to retain full results beyond the scrollback.
 :history clear | :history off | :history on   Control terminal history persistence
@@ -78,7 +81,7 @@ def cell_slice(text, start, width):
 
 
 class TerminalSession:
-    def __init__(self, cwd=None, settings_path=None, no_history=False, no_cwd=False):
+    def __init__(self, cwd=None, settings_path=None, no_history=False, no_cwd=False, syntax="stata"):
         self.settings_path = Path(settings_path) if settings_path else state_path()
         settings = {}
         try:
@@ -100,7 +103,7 @@ class TerminalSession:
             and Path(saved_cwd).is_dir()
         ):
             cwd = saved_cwd
-        self.engine = Engine(cwd=cwd)
+        self.engine = Engine(cwd=cwd, syntax_mode=syntax)
         self.events = queue.Queue()
         self.engine.emit_callback = self.events.put
         self.lines = deque(maxlen=10000)
@@ -507,7 +510,7 @@ def workspace(screen, session):
             )
 
 
-def main(cwd=None, audit=None, no_history=False, no_cwd=False):
+def main(cwd=None, audit=None, no_history=False, no_cwd=False, syntax="stata"):
     if not sys.stdin.isatty() or not sys.stdout.isatty():
         print(
             "Terminal mode needs an interactive terminal. Use --batch FILE.do for redirected input/output.",
@@ -526,7 +529,7 @@ def main(cwd=None, audit=None, no_history=False, no_cwd=False):
     import matplotlib
 
     matplotlib.use("Agg")
-    session = TerminalSession(cwd=cwd, no_history=no_history, no_cwd=no_cwd)
+    session = TerminalSession(cwd=cwd, no_history=no_history, no_cwd=no_cwd, syntax=syntax)
     try:
         curses.wrapper(workspace, session)
     except curses.error as exc:

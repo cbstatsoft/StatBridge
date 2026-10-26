@@ -1075,6 +1075,22 @@ var x y [z], lags(1) [noconstant]
 
 Backend: statsmodels VAR. Requires consecutive `tsset` series. [Specialist guide](SPECIALIST_MODELS.md).
 
+## varirf
+
+```text
+varirf [, steps(8)]
+```
+
+Ordered Cholesky-orthogonalised VAR point impulse responses; no intervals or causal claims. [Specialist guide](SPECIALIST_MODELS.md).
+
+## varfevd
+
+```text
+varfevd [, steps(8)]
+```
+
+Ordered forecast-error variance shares (0–1), horizons 1 to steps. [Specialist guide](SPECIALIST_MODELS.md).
+
 ## varforecast
 
 ```text
@@ -1360,6 +1376,22 @@ stsum [, by(group)]
 Backend: statsmodels.
 
 Counts, failures, risk-time and Kaplan-Meier median.
+
+## syntax
+
+```text
+syntax logos | syntax stata
+```
+
+Select the session command language. See [Logos syntax](LOGOS.md). In Logos mode prefix legacy commands with `stata:`; a one-shot Logos command can be run as `logos: statement` regardless of mode.
+
+## logos
+
+```text
+logos: natural-language statement
+```
+
+Offline deterministic English and logical-predicate syntax, not unrestricted free text or natural language inference. [Full grammar](LOGOS.md).
 
 ## summarize
 

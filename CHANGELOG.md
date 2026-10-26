@@ -1,5 +1,9 @@
 # Unreleased: next statistical roadmap phase
 
+- Add **Logos**, an optional offline, deterministic English/formal-logic command grammar (comparisons, ∧/∨/¬, missingness, common data summaries, regressions, filtering and predictions) compiling to the existing engine. Expose it in Qt, curses and batch with audited translations, explicit `stata:` escapes and error-first handling for ambiguous commands.
+- Extend VAR postestimation with Cholesky-ordered point impulse-response functions and forecast-error variance decomposition for stationary fitted VARs; each limited to 24 horizons without bootstrap intervals, generalised impulses or causal interpretation.
+- Add independent numerical VAR companion-recursion and Logos translation-versus-Stata model-parity tests, plus executable examples, help and reference documentation.
+
 - Add bounded group-time staggered DiD against never-treated units, with independent unit-level change-score inference and pre-period placebo contrasts; do not conflate it with full Callaway-Sant'Anna estimators.
 - Extend existing one-stage stratified survey inference with validated per-stratum finite-population correction using sampling fractions or PSU population counts.
 - Phase C development: bounded Gaussian mixed models with random intercept/slope; balanced within-subject repeated-measures ANOVA; continuous PMM/MICE with Rubin-pooled OLS; gapless-series VAR and point forecasts/stability checks.
