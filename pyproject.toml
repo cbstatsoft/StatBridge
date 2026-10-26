@@ -32,6 +32,11 @@ statbridge-gui = "statbridge.ui:main"
 include = ["statbridge*"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# Only the upstream Matplotlib/PySide6 high-DPI enum warning is filtered.
+# Keep all other DeprecationWarnings visible, including our own API changes.
+filterwarnings = [
+  "ignore:Enum value .*AA_UseHighDpiPixmaps.*is marked as deprecated:DeprecationWarning:matplotlib[.]backends[.]backend_qt",
+]
 
 [tool.setuptools.package-data]
 statbridge = ["sample_data/*.csv", "assets/*.svg", "legal/*"]

@@ -445,8 +445,44 @@ class ModelCommands:
         transform = np.full(len(b), exponentiate, dtype=bool)
         if m.command == "nbreg":
             transform &= m.params.index != "alpha"
-        shown = np.where(transform, np.exp(b), b)
-        shown_se = np.where(transform, np.exp(b) * se, se)
+        # np.where evaluates both branches before selecting. In particular,
+        # np.where(False, np.exp(large_OLS_coefficient), coefficient) still
+        # overflows for an ordinary (non-exponentiated) OLS fit. Only evaluate
+        # the ratio scale for coefficients that actually require it.
+        shown = b.copy()
+        shown_se = se.copy()
+        shown_low = low.copy()
+        shown_high = high.copy()
+        if transform.any():
+            # Floating-point overflow in a genuinely exponentiated parameter
+            # is meaningful; keep the inf/zero result and issue a notice
+            # instead of emitting a raw NumPy warning or clipping a ratio.
+            with np.errstate(over="ignore", under="ignore", invalid="ignore"):
+                ratios = np.exp(b[transform])
+                ratio_se = ratios * se[transform]
+                ratio_low = np.exp(low[transform])
+                ratio_high = np.exp(high[transform])
+            shown[transform] = ratios
+            shown_se[transform] = ratio_se
+            shown_low[transform] = ratio_low
+            shown_high[transform] = ratio_high
+            if (
+                not all(np.isfinite(v).all() for v in (ratios, ratio_se, ratio_low, ratio_high))
+                or any(
+                    np.any((v == 0) & np.isfinite(raw))
+                    for v, raw in (
+                        (ratios, b[transform]),
+                        (ratio_low, low[transform]),
+                        (ratio_high, high[transform]),
+                    )
+                )
+            ):
+                self.notice(
+                    "EXP_COEFFICIENT_RANGE",
+                    "An exponentiated estimate or interval is beyond finite "
+                    "floating-point range; zero or infinity is shown as applicable. "
+                    "Underlying coefficients and inference are unchanged.",
+                )
         table = pd.DataFrame(
             {
                 "Ratio / alpha"
@@ -457,8 +493,8 @@ class ModelCommands:
                 "Std. err.": shown_se,
                 "t" if m.df is not None else "z": statistic,
                 "P>|stat|": p,
-                "CI lower": np.where(transform, np.exp(low), low),
-                "CI upper": np.where(transform, np.exp(high), high),
+                "CI lower": shown_low,
+                "CI upper": shown_high,
             },
             index=m.params.index,
         )

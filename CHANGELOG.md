@@ -1,5 +1,8 @@
 # Unreleased: next statistical roadmap phase
 
+- Fix eager exponentiation in coefficient reporting: large conventional OLS coefficients no longer trigger spurious overflow warnings. Ratio/IRR output remains unchanged within representable range; genuine ratio overflow now produces a compatibility notice instead of a raw NumPy warning.
+- Filter only the known upstream Matplotlib/PySide6 `AA_UseHighDpiPixmaps` pytest deprecation warning while leaving unrelated warnings visible.
+
 - Add **Logos**, an optional offline, deterministic English/formal-logic command grammar (comparisons, ∧/∨/¬, missingness, common data summaries, regressions, filtering and predictions) compiling to the existing engine. Expose it in Qt, curses and batch with audited translations, explicit `stata:` escapes and error-first handling for ambiguous commands.
 - Extend VAR postestimation with Cholesky-ordered point impulse-response functions and forecast-error variance decomposition for stationary fitted VARs; each limited to 24 horizons without bootstrap intervals, generalised impulses or causal interpretation.
 - Add independent numerical VAR companion-recursion and Logos translation-versus-Stata model-parity tests, plus executable examples, help and reference documentation.
