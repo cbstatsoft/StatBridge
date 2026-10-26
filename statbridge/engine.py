@@ -535,6 +535,20 @@ class Engine(
             f"Stata version {args} requested. StatBridge cannot emulate historical Stata version semantics; current Python backends remain in use.",
         )
 
+    def cmd_logosexists(self, args, opt):
+        """Evaluate whether any row satisfies a Logos predicate."""
+        if opt or not args.strip():
+            raise StataError("Syntax: exists row where predicate")
+        matches = self.mask({"if": args})
+        count = int(matches.sum())
+        self.r = {"exists": int(count > 0), "N_matches": count}
+        self.out(f"Existential predicate: {'true' if count else 'false'} ({count} matching rows)")
+        self.notice(
+            "LOGOS_QUANTIFIERS",
+            "Logos row quantifiers range only over observations in the active dataset. "
+            "No variables, relationships, nested quantifiers, or formal proofs are inferred."
+        )
+
     def cmd_syntax(self, args, opt):
         """Change the command language for this session; no estimator state changes."""
         if opt or args.strip().lower() not in ("", "stata", "logos"):
