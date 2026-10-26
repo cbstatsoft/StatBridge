@@ -81,6 +81,19 @@ def translate_logos(statement):
         return "describe"
     if re.fullmatch(r"(?:count\s+(?:rows|observations)|how\s+many\s+(?:rows|observations))", source, re.I):
         return "count"
+    # Bounded quantification is over rows in the active dataset only.
+    m = re.fullmatch(
+        r"(?:∀\s*rows\s*:\s*|for\s+all\s+rows\s*[, :]\s*|every\s+row\s+satisfies\s+)(.+)",
+        source, re.I
+    )
+    if m:
+        return "assert " + _predicate(m[1])
+    m = re.fullmatch(
+        r"(?:∃\s*(?:row|rows)\s*:\s*|there\s+exists\s+(?:a\s+)?row\s+(?:where|such\s+that)\s+|exists\s+(?:a\s+)?row\s+(?:where|such\s+that)\s+)(.+)",
+        source, re.I
+    )
+    if m:
+        return "logosexists " + _predicate(m[1])
     m = re.fullmatch(r"(?:count\s+(?:rows|observations)|how\s+many\s+(?:rows|observations))\s+(?:where|such\s+that)\s+(.+)", source, re.I)
     if m:
         return "count if " + _predicate(m[1])
