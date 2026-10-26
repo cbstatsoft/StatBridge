@@ -8,7 +8,7 @@
 ![Linux](https://img.shields.io/badge/Linux-supported-FCC624?logo=linux&logoColor=black)
 ![macOS](https://img.shields.io/badge/macOS-supported-000000?logo=apple&logoColor=white)
 
-**An open-source statistical workspace with a Stata-inspired command interface, a Qt6 desktop application, and a curses terminal mode.**
+**An open-source statistical workspace with Stata-inspired commands or the optional Logos English/formal-logic language, a Qt6 desktop application and a curses terminal mode.**
 
 StatBridge helps students and applied researchers prepare data, run statistical analyses, work with do-files, and interpret results using Python statistical libraries. It offers contextual command completion, multi-format data import/export, and 30 optional offline learning exercises. No Stata installation, licence key, account, or online service is required after the Python dependencies have been installed.
 
@@ -89,17 +89,31 @@ xtset country year
 xtreg income education i.year, fe vce(cluster country)
 ```
 
+### Logos — optional English and formal logic
+
+Use **Window → Command language → Logos** in the desktop app, or enter `syntax logos` in any command interface:
+
+```text
+syntax logos
+summarise income and education
+count rows where (age ≥ 18) ∧ (income is not missing)
+regress income on education and experience
+syntax stata
+```
+
+Logos is offline and grammar-based. It translates only supported, unambiguous statements into existing StatBridge commands; it does not guess an estimator or execute arbitrary free-text instructions. Escape with `stata:` for existing Stata syntax. See the [Logos guide](docs/LOGOS.md), the [worked example](examples/logos_workflow.do), or launch with `--syntax logos`.
+
 This example assumes your dataset has the named variables. A new synthetic ANOVA walkthrough is in [`examples/anova_phase.do`](examples/anova_phase.do), covering group comparisons and factorial effects. For implemented syntax, use `help command` in StatBridge or consult the [command reference](docs/COMMANDS.md). Other runnable examples are in `examples/`.
 
 ## What StatBridge can do
 
 | Area | Capabilities |
 | --- | --- |
-| **Statistical analysis** | OLS, logit/probit, selected GLMs and categorical models, FE/RE and guarded mixed models, IV/2SLS, factorial/repeated ANOVA and adjusted group comparisons, classical OLS diagnostics, limited continuous multiple imputation and VAR, descriptive tests and selected survey/survival workflows, including one-stage finite-population correction and narrowly defined staggered cohort DiD. |
+| **Statistical analysis** | OLS, logit/probit, selected GLMs and categorical models, FE/RE and guarded mixed models, IV/2SLS, factorial/repeated ANOVA and adjusted group comparisons, classical OLS diagnostics, limited continuous multiple imputation, VAR with ordered impulse responses and FEVD, descriptive tests and selected survey/survival workflows, including one-stage finite-population correction and narrowly defined staggered cohort DiD. |
 | **Data preparation** | Summaries, reshaping, merging, recoding, grouping, filtering, duplicate checks, and selected Polars-accelerated operations. |
 | **Data interchange** | Import/export of Stata, SPSS, R, Parquet, Arrow, Excel, CSV, and additional tabular formats, with format-specific limits. |
 | **Do-files** | Execute supported Stata-like commands, scripts, loops, macros, file navigation, and batch jobs. |
-| **Interfaces** | Qt6 workspace and data editor, variable-selection analysis forms, command completion, dark/light themes, and curses terminal UI. |
+| **Interfaces** | Qt6 workspace and data editor, variable-selection analysis forms, command completion, dark/light themes, curses terminal, and optional Logos command grammar. |
 | **Learning** | 30 optional offline exercises and statistical test-interpretation guidance, including FE/RE and Hausman testing. |
 | **Reproducibility** | Structured result exports, compatibility notices, optional JSON audit reports, and example datasets/scripts. |
 
@@ -158,6 +172,7 @@ A successful run exits with status 0; an uncaptured error exits with status 1. A
 | [Compatibility and workflow coverage](docs/COMPATIBILITY.md) | Backend differences, statistical limitations, and validation boundaries |
 | [Dataset formats](docs/FILE_FORMATS.md) | Import/export matrix, metadata preservation, and known losses |
 | [Learning support](docs/LEARNING.md) | Exercises and interpretation guides |
+| [Logos syntax](docs/LOGOS.md) | Optional bounded English/formal-logic grammar and mode selection |
 | [ANOVA and multiple comparisons](docs/ANOVA.md) | Factorial models, pooled tests, Tukey-Kramer and inference limits |
 | [Specialist statistical workflows](docs/SPECIALIST_MODELS.md) | Bounded mixed models, repeated ANOVA, continuous MI, VAR and their statistical limits |
 | [Desktop and terminal](docs/UI_DESIGN.md) · [Terminal](docs/TERMINAL.md) | UI behaviour, controls, and workflows |
