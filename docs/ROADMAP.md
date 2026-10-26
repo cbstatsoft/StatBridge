@@ -1,6 +1,6 @@
 # StatBridge development roadmap
 
-Updated 14 October 2026. The last validated public-beta release is **0.7.1**. This roadmap separates implemented code from validation still required. StatBridge is **not** a complete or numerically certified Stata replacement.
+Updated 26 October 2026. The last tagged public-beta release is **0.7.1**. This roadmap separates implemented code from validation still required. StatBridge is **not** a complete or numerically certified Stata replacement.
 
 ## Completed and available in the public beta
 
@@ -54,6 +54,19 @@ The development branch adds four explicitly bounded workflows plus an unadjusted
 | Lower | More time-series and multivariate specialist methods | Unit roots, lag selection, stability, diagnostics and conventions |
 
 None of these are claimed implemented solely because a similar general command exists.
+
+## Phase D: bounded time-series diagnostics and alternative command language
+
+Implemented in the current development branch, pending nine-configuration CI validation:
+
+- `varirf`: Cholesky-orthogonalised point impulse responses of stable fitted Gaussian VARs, with explicit ordering dependence, horizons 0–24, and no inference/structural identification claims.
+- `varfevd`: independently checked point forecast-error variance shares, horizons 1–24, with numerically verified unit-sum shares and positive-definite covariance requirements.
+- **Logos**: a second, explicitly opt-in [English/formal-logic grammar](LOGOS.md). A deterministic, offline translator maps supported tasks and predicates to canonical StatBridge commands, retaining audit information and refusing unsupported/ambiguous requests. Available via `syntax logos`, `logos: ...`, Qt menu, terminal and batch `--syntax logos`.
+- Proof-by-fixture requirements: analytic MA recursion and variance decomposition checks, model equivalence under both grammars, no silent dataset mutation on parse errors and mixed-syntax do-file tests.
+
+**Phase D exit gate:** all supported Python 3.11–3.13 and Linux/Windows/macOS CI checks green, CLI installed-wheel tests, a mixed-syntax execution example, help/menu integration and an accurate statement that Logos is a bounded grammar rather than an LLM or general-purpose theorem prover.
+
+**Remaining specialist roadmap:** weak-IV robust confidence sets, multistage/replicate survey designs, general categorical MI, full cohort-ATT simultaneous inference, advanced mixed models, repeated-ANOVA corrections, structural VAR/VECM/cointegration and specialised SEM/Bayesian estimators. No Stata numerical-parity certification claimed.
 
 ## Delivery and maintenance principles
 
