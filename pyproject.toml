@@ -35,7 +35,7 @@ testpaths = ["tests"]
 # Only the upstream Matplotlib/PySide6 high-DPI enum warning is filtered.
 # Keep all other DeprecationWarnings visible, including our own API changes.
 filterwarnings = [
-  "ignore:Enum value 'Qt::ApplicationAttribute[.]AA_UseHighDpiPixmaps' is marked as deprecated:DeprecationWarning:matplotlib[.]backends[.]backend_qt",
+  "ignore:Enum value .*AA_UseHighDpiPixmaps.*is marked as deprecated:DeprecationWarning:matplotlib[.]backends[.]backend_qt",
 ]
 
 [tool.setuptools.package-data]
