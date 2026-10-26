@@ -151,3 +151,45 @@ def test_logos_invalid_mode_is_rejected(data):
     e.df = data
     assert not e.execute("syntax gpt")
     assert e.syntax_mode == "stata"
+
+
+def test_logos_example_and_cli_batch(tmp_path):
+    from pathlib import Path
+    import subprocess
+    import sys
+
+    script = Path(__file__).resolve().parents[1] / "examples" / "logos_workflow.do"
+    e = Engine(cwd=tmp_path)
+    assert e.run(script.read_text(encoding="utf-8")), [
+        v["text"] for v in e.events if v["kind"] == "error"
+    ][-5:]
+    assert len(e.df) == 120
+    assert "error" in e.df
+    assert e.syntax_mode == "stata"
+    assert any(record.get("language") == "logos" for record in e.ledger)
+
+    result = subprocess.run([
+        sys.executable, "-m", "statbridge", "--syntax", "stata",
+        "--batch", str(script), "--cwd", str(tmp_path)
+    ], cwd=tmp_path, capture_output=True, text=True, encoding="utf-8")
+    assert result.returncode == 0, (result.stdout[-1200:], result.stderr)
+    assert "Logos → regress income education experience" in result.stdout
+
+
+def test_cli_logos_startup_without_mode_switch(tmp_path):
+    import subprocess
+    import sys
+
+    script = tmp_path / "logos.do"
+    script.write_text(
+        "stata: clear\nstata: set obs 12\n"
+        "stata: generate age = _n\ncount rows where age ≥ 10\n",
+        encoding="utf-8"
+    )
+    result = subprocess.run(
+        [sys.executable, "-m", "statbridge", "--batch", str(script),
+         "--syntax", "logos", "--cwd", str(tmp_path)],
+        cwd=tmp_path, capture_output=True, text=True, encoding="utf-8"
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "3" in result.stdout
