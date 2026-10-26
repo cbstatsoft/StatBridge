@@ -31,6 +31,7 @@ from .format_io import FormatIOCommands
 from .everyday import EverydayCommands
 from .extended_models import ExtendedModelCommands
 from .survey import SurveyCommands
+from .logos import translate_logos
 from .specialist_models import SpecialistModels
 from .cohort_did import CohortDID
 from .multiple_imputation import MultipleImputationCommands
@@ -58,7 +59,10 @@ class Engine(
     ModelCommands,
     FileCommands,
 ):
-    def __init__(self, emit=None, cwd=None):
+    def __init__(self, emit=None, cwd=None, syntax_mode="stata"):
+        if syntax_mode not in ("stata", "logos"):
+            raise ValueError("syntax_mode must be stata or logos")
+        self.syntax_mode = syntax_mode
         self.df = pd.DataFrame()
         from .data_backend import DataBackend
 
@@ -322,18 +326,39 @@ class Engine(
                 break
         if not self.quiet:
             self.emit("command", ". " + text)
-        firstword = text.split(None, 1)[0].split(",")[0]
-        canonical = ALIASES.get(firstword, firstword)
-        if canonical in ("svy:", "svy,"):
-            canonical = "svy"
         record = {
             "command": text,
-            "canonical": canonical,
-            "backend": COMMANDS.get(canonical, ("", "interpreter"))[1],
+            "canonical": "logos" if self.syntax_mode == "logos" else "",
+            "backend": "Logos translator" if self.syntax_mode == "logos" else "interpreter",
             "status": "running",
         }
         self.ledger.append(record)
         try:
+            original = text
+            if re.fullmatch(r"syntax(?:\s+.*)?", text, flags=re.I):
+                # Mode switching works in either language.
+                pass
+            elif text.lower().startswith("logos:"):
+                text = translate_logos(text[6:])
+                record["language"] = "logos"
+            elif text.lower().startswith("stata:"):
+                text = text[6:].strip()
+                if not text:
+                    raise StataError("stata: requires a command")
+                record["language"] = "stata"
+            elif self.syntax_mode == "logos":
+                text = translate_logos(text)
+                record["language"] = "logos"
+            if text != original:
+                record["translated"] = text
+                if not self.quiet:
+                    self.emit("translation", "Logos → " + text if record.get("language")=="logos" else "Stata → " + text)
+            firstword = text.split(None, 1)[0].split(",")[0]
+            canonical = ALIASES.get(firstword, firstword)
+            if canonical in ("svy:", "svy,"):
+                canonical = "svy"
+            record["canonical"] = canonical
+            record["backend"] = COMMANDS.get(canonical, ("", "interpreter"))[1]
             self.dispatch(text)
             record["status"] = "ok"
             self.scalars["_rc"] = 0
@@ -507,6 +532,21 @@ class Engine(
             "VERSION",
             f"Stata version {args} requested. StatBridge cannot emulate historical Stata version semantics; current Python backends remain in use.",
         )
+
+    def cmd_syntax(self, args, opt):
+        """Change the command language for this session; no estimator state changes."""
+        if opt or args.strip().lower() not in ("", "stata", "logos"):
+            raise StataError("Syntax: syntax stata | syntax logos")
+        if args.strip():
+            self.syntax_mode = args.strip().lower()
+        self.out(f"Command language: {self.syntax_mode}")
+        if self.syntax_mode == "logos":
+            self.notice(
+                "LOGOS_GRAMMAR",
+                "Logos is an offline, explicit English/predicate-logic subset. "
+                "It rejects unsupported or ambiguous statements rather than guessing. "
+                "Use 'stata: command' for existing Stata-style syntax."
+            )
 
     def cmd_help(self, args, opt):
         if opt:
