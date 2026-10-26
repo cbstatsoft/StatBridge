@@ -23,6 +23,7 @@ from PySide6.QtCore import (
 )
 from PySide6.QtGui import (
     QAction,
+    QActionGroup,
     QKeySequence,
     QFont,
     QFontDatabase,
@@ -339,13 +340,16 @@ class Worker(QThread):
 
 
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, syntax=None):
         super().__init__()
         self.settings = QSettings("StatBridge", "StatBridge Qt")
         self.dark_mode = self.settings.value("dark_mode", False, type=bool)
         self.remember_history = self.settings.value("remember_history", True, type=bool)
         self.remember_cwd = self.settings.value("remember_cwd", True, type=bool)
-        self.engine = Engine()
+        chosen_syntax = syntax or self.settings.value("syntax_mode", "stata")
+        if chosen_syntax not in ("stata", "logos"):
+            chosen_syntax = "stata"
+        self.engine = Engine(syntax_mode=chosen_syntax)
         self.worker = None
         self.pending_graph = None
         self.do_path = None
@@ -662,6 +666,19 @@ class MainWindow(QMainWindow):
         self.review.setContextMenuPolicy(Qt.ContextMenuPolicy.ActionsContextMenu)
         self.review.addAction(self.clear_history_action)
         self.review.addAction(self.remember_history_action)
+        language_menu = view.addMenu("Command language")
+        self.language_group = QActionGroup(self)
+        self.language_group.setExclusive(True)
+        self.stata_language_action = QAction("Stata-compatible syntax", self)
+        self.logos_language_action = QAction("Logos — English / formal logic", self)
+        for mode, item in (("stata", self.stata_language_action), ("logos", self.logos_language_action)):
+            item.setCheckable(True)
+            item.setChecked(self.engine.syntax_mode == mode)
+            item.triggered.connect(lambda checked=False, m=mode: self.set_command_language(m))
+            self.language_group.addAction(item)
+            language_menu.addAction(item)
+            self.actions.append(item)
+        action(helpmenu, "Logos language guide", lambda: self.start("help logos"))
         self.dark_action = QAction("Material dark mode", self)
         self.dark_action.setCheckable(True)
         self.dark_action.setChecked(self.dark_mode)
@@ -830,6 +847,14 @@ class MainWindow(QMainWindow):
         self.settings.sync()
         self.statusBar().showMessage("Command history cleared.", 4000)
 
+    def set_command_language(self, mode):
+        if self.worker is not None or mode not in ("stata", "logos"):
+            return
+        self.engine.syntax_mode = mode
+        self.settings.setValue("syntax_mode", mode)
+        self.statusBar().showMessage(f"Command language: {mode}")
+        self.refresh()
+
     def set_dark_mode(self, enabled):
         self.dark_mode = bool(enabled)
         self.settings.setValue("dark_mode", self.dark_mode)
@@ -956,6 +981,12 @@ class MainWindow(QMainWindow):
         self.worker.start()
 
     def finished(self):
+        mode = self.engine.syntax_mode
+        self.settings.setValue("syntax_mode", mode)
+        for name, item in (("stata", self.stata_language_action), ("logos", self.logos_language_action)):
+            item.blockSignals(True)
+            item.setChecked(name == mode)
+            item.blockSignals(False)
         self.worker.deleteLater()
         self.worker = None
         self.learning.set_busy(False)
@@ -1367,7 +1398,7 @@ class MainWindow(QMainWindow):
         event.accept()
 
 
-def main():
+def main(syntax=None):
     app = QApplication.instance() or QApplication(sys.argv)
     app.setApplicationName("StatBridge Qt")
     app.setOrganizationName("StatBridge")
@@ -1377,6 +1408,6 @@ def main():
     if sys.platform.startswith("linux") and hasattr(app, "setDesktopFileName"):
         app.setDesktopFileName("io.github.cbstatsoft.StatBridge")
     app.setStyle("Fusion")
-    window = MainWindow()
+    window = MainWindow(syntax=syntax)
     window.show()
     return app.exec()
