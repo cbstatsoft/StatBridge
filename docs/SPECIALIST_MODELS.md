@@ -47,9 +47,11 @@ varforecast, steps(8)
 
 A bounded statsmodels Gaussian VAR using the declared `tsset` time variable. It accepts two to six continuous series, explicit lag order 1–12, a constant (default) or `noconstant`. Time must be finite and **consecutive at the declared delta**, with no missing observation or series entry. Order selection is not automated; AIC/BIC and coefficient matrices are returned from the estimated model.
 
-`varstable` checks inverse characteristic roots against the unit circle. `varforecast` produces 1–60 conditional mean point predictions from stable models and returns the corresponding future time values. Any dataset or time-declaration change invalidates a previously fitted VAR.
+`varstable` checks inverse characteristic roots against the unit circle. `varforecast` produces 1–60 conditional mean point predictions from stable models and returns the corresponding future time values.
 
-**Not implemented:** VECM, cointegration tests, structural VAR, impulse responses, FEVD, forecast intervals, robust covariance, exogenous regressors or advanced trend choices. A stable fitted VAR is not proof that the data generating process is stationary.
+`varirf, steps(8)` reports order-dependent Cholesky-orthogonalised point impulse responses for horizons 0–8 from a stable fitted VAR. `varfevd, steps(8)` reports Cholesky forecast-error variance shares (1–8 steps), which sum to one for each response/horizon. Both commands preserve the fitted VAR and dataset, require positive-definite innovation covariance and are limited to 1–24 requested steps. They do **not** estimate causal structural shocks, confidence intervals, bootstrap/simultaneous bands or generalised impulse responses. Any dataset or time-declaration change invalidates a previously fitted VAR.
+
+**Not implemented:** VECM, cointegration tests, structural VAR identification, generalised IRFs, interval/band inference, forecast intervals, robust covariance, exogenous regressors or advanced trend choices. A stable fitted VAR is not proof that the data generating process is stationary.
 
 ## Staggered cohort-period difference-in-differences (bounded)
 
