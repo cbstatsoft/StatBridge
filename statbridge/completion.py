@@ -308,7 +308,7 @@ class Suggestions:
         if roots:
             return [text[:len(text)-len(prefix)] + x for x in roots]
         match = re.match(
-            r"^(regress\s+\w+\s+on\s+|summari[sz]e\s+|"
+            r"^(regress\s+|regress\s+\w+\s+on\s+|summari[sz]e\s+|"
             r"summary\s+of\s+|average\s+of\s+|"
             r"tabulate\s+|correlate\s+)([A-Za-z_]\w*)$",
             prefix, flags=re.I
