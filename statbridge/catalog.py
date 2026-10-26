@@ -616,9 +616,15 @@ COMMANDS["logos"] = (
     "logos: natural-language statement | syntax logos",
     "Offline deterministic translator",
     "Explicit English and predicate-logic grammar: summarise, count, keep/drop rows "
-    "where predicate, regress Y on X, linear/logistic/probit models, generate, "
+    "where predicate, forall/exists row predicates, regress Y on X, linear/logistic/probit models, generate, "
     "tabulate, correlate, histogram, predict and help. No arbitrary free-text "
     "interpretation or silent execution. See docs/LOGOS.md.",
+)
+COMMANDS["logosexists"] = (
+    "logosexists predicate",
+    "StatBridge safe expression engine",
+    "Internal Logos row-level existential predicate, returning r(exists) and r(N_matches). "
+    "Only the active observations are quantified; no arbitrary theorem proving.",
 )
 COMMANDS["varirf"] = (
     "varirf [, steps(8)]",
