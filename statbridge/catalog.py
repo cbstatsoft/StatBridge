@@ -605,6 +605,34 @@ COMMANDS['predict']=(COMMANDS['predict'][0]+' | predict new, pr outcome(category
 
 COMMANDS["license"] = ("license", "StatBridge", "Display offline GNU GPL v3 or later, copyright and third-party notices. StatBridge extension.")
 
+# Logos is a second command language, never a silent replacement of Stata.
+COMMANDS["syntax"] = (
+    "syntax stata | syntax logos",
+    "StatBridge interpreter",
+    "Select Stata-compatible or bounded Logos command language for this session. "
+    "Use 'logos: ...' for one Logos statement, or 'stata: ...' to escape Logos mode.",
+)
+COMMANDS["logos"] = (
+    "logos: natural-language statement | syntax logos",
+    "Offline deterministic translator",
+    "Explicit English and predicate-logic grammar: summarise, count, keep/drop rows "
+    "where predicate, regress Y on X, linear/logistic/probit models, generate, "
+    "tabulate, correlate, histogram, predict and help. No arbitrary free-text "
+    "interpretation or silent execution. See docs/LOGOS.md.",
+)
+COMMANDS["varirf"] = (
+    "varirf [, steps(8)]",
+    "statsmodels VAR / NumPy",
+    "Cholesky-orthogonalized point impulse responses, horizons 0 through steps, "
+    "ordering-dependent with no confidence intervals or structural interpretation.",
+)
+COMMANDS["varfevd"] = (
+    "varfevd [, steps(8)]",
+    "statsmodels VAR / NumPy",
+    "Cholesky-orthogonalized forecast-error variance shares, horizons 1 through "
+    "steps, no bootstrap/confidence intervals or structural interpretation.",
+)
+
 # Specialist estimator subsets. These names do not claim full Stata syntax parity.
 COMMANDS["svyset"] = (
     "svyset psu [pw=weight] [, strata(stratum) fpc(fraction_or_population_psus)]",
