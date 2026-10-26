@@ -193,3 +193,28 @@ def test_cli_logos_startup_without_mode_switch(tmp_path):
     )
     assert result.returncode == 0, result.stdout + result.stderr
     assert "3" in result.stdout
+
+
+@pytest.mark.parametrize("statement,canonical", [
+    ("∀ rows: x ≥ -3", "assert x >= -3"),
+    ("every row satisfies adult ≥ 0", "assert adult >= 0"),
+    ("∃ row: x ≥ 2", "logosexists x >= 2"),
+    ("there exists a row where x > 0", "logosexists x > 0"),
+])
+def test_quantified_predicates_translate(statement, canonical):
+    assert translate_logos(statement) == canonical
+
+
+def test_row_quantifiers_are_truthful_and_preserve_data(data):
+    e = Engine(syntax_mode="logos")
+    e.df = data.copy(deep=True)
+    assert e.execute("∀ rows: x ≥ -3")
+    assert not e.execute("∀ rows: x > 0")
+    assert e.ledger[-1]["canonical"] == "assert"
+    assert e.execute("∃ row: x > 2")
+    assert e.r["exists"] == 1
+    assert e.r["N_matches"] > 0
+    assert e.execute("there exists a row where x > 200")
+    assert e.r["exists"] == 0
+    assert e.r["N_matches"] == 0
+    pd.testing.assert_frame_equal(e.df, data)
