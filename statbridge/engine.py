@@ -32,12 +32,14 @@ from .everyday import EverydayCommands
 from .extended_models import ExtendedModelCommands
 from .survey import SurveyCommands
 from .logos import translate_logos
+from .var_postestimation import VarPostEstimation
 from .specialist_models import SpecialistModels
 from .cohort_did import CohortDID
 from .multiple_imputation import MultipleImputationCommands
 
 
 class Engine(
+    VarPostEstimation,
     CohortDID,
     MultipleImputationCommands,
     SpecialistModels,
