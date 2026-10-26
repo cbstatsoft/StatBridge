@@ -299,7 +299,8 @@ class Suggestions:
             "list rows with ", "regress ", "fit linear model ",
             "fit logistic model ", "fit probit model ",
             "create ", "let ", "tabulate ", "correlate ",
-            "histogram of ", "predict fitted values as ",
+            "histogram of ", "every row satisfies ", "there exists a row where ",
+            "∀ rows: ", "∃ row: ", "predict fitted values as ",
             "predict residuals as ", "explain ", "syntax stata",
             "stata: ", "logos: ",
         ]
