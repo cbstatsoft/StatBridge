@@ -678,7 +678,7 @@ class MainWindow(QMainWindow):
             self.language_group.addAction(item)
             language_menu.addAction(item)
             self.actions.append(item)
-        action(helpmenu, "Logos language guide", lambda: self.start("help logos"))
+        action(helpmenu, "Logos language guide", lambda: self.start("stata: help logos"))
         self.dark_action = QAction("Material dark mode", self)
         self.dark_action.setCheckable(True)
         self.dark_action.setChecked(self.dark_mode)
