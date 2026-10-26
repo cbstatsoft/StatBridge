@@ -48,6 +48,8 @@ You can also start either interface in Stata mode and execute `syntax logos`. Do
 | `average of income` | `mean income` |
 | `count rows` | `count` |
 | `count rows where age >= 18` | `count if age >= 18` |
+| `∀ rows: age ≥ 0` | `assert age >= 0` (fails if contradicted) |
+| `∃ row: income > 1000` | `logosexists income > 1000` (returns truth and number of matches) |
 | `keep rows where age ≥ 18` | `keep if age >= 18` |
 | `drop rows where missing(income)` | `drop if missing(income)` |
 | `list rows with income and education where age ≥ 18` | `list income education if age >= 18` |
@@ -83,11 +85,13 @@ Logical predicate mappings:
 - `∨`, `or` → logical disjunction (`|`).
 - `¬`, `not(...)` → negation (`!`).
 - `≥`, `≤`, `≠` → `>=`, `<=`, `!=`.
+- `∀ rows: P`, `every row satisfies P` → `assert P` (universal row truth; fails if false).
+- `∃ row: P`, `there exists a row where P` → `logosexists P` (returns `r(exists)` and `r(N_matches)`; false is a valid result).
 - `=`, `equals`, `is equal to` → equality comparison `==` **within a predicate**.
 - `is missing`, `is not missing` → `missing(x)`, `!missing(x)`.
 - `at least`, `at most`, `greater than`, `less than` → comparison operators.
 
-StatBridge's existing safe expression parser ultimately validates and evaluates predicates. There are **no universal/existential quantifiers, proof tactics, type inference, free-text semantic disambiguation, arbitrary natural-language transformations, plugins, network requests or generated code execution**. For formal statistical model workflows beyond Logos's grammar, use `stata: ...`.
+StatBridge's existing safe expression parser ultimately validates and evaluates predicates. Quantifiers range **only over the rows of the currently loaded dataset**. There are **no nested or variable-domain quantifiers, theorem-proving tactics, type inference, free-text semantic disambiguation, arbitrary natural-language transformations, plugins, network requests or generated code execution**. For formal statistical model workflows beyond Logos's grammar, use `stata: ...`.
 
 ## Errors, audit and reproducibility
 
